@@ -144,7 +144,7 @@ input[type="range"]::-moz-range-thumb{
     align-items: end;
 }
 
-button{
+.search-btn{
     width: 100%;
     height: 46px;
     border: none;
@@ -157,7 +157,7 @@ button{
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-button:hover{
+.search-btn:hover{
     transform: translateY(-1px);
     box-shadow: 0 8px 18px rgba(44,123,229,0.25);
 }
@@ -212,7 +212,6 @@ button:hover{
     color: #1b5edb;
     border-radius: 999px;
     font-weight: 700;
-    width: fit-content;
 }
 
 .no-result{
@@ -245,8 +244,6 @@ button:hover{
 
 .page-btn:hover{
     background: #e8f1ff;
-    transform: none;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
 
 .active-page{
@@ -277,7 +274,7 @@ footer{
         display: block;
     }
 
-    button{
+    .search-btn{
         width: 100%;
     }
 }
