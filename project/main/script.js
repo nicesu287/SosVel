@@ -124,7 +124,8 @@ for (let i = 1; i <= 120; i++) {
 }
 
 function updatePrice() {
-    const priceInput = document.getElementById("priceInput");const priceValue = document.getElementById("priceValue");
+    const priceInput = document.getElementById("priceInput");
+    const priceValue = document.getElementById("priceValue");
     const price = parseInt(priceInput.value, 10);
 
     if (price >= 5000000) {
@@ -219,7 +220,8 @@ function renderPagination() {
         ) {
             const btn = document.createElement("button");
             btn.textContent = i;
-            btn.className = "page-btn";if (i === currentPage) btn.classList.add("active");
+            btn.className = "page-btn";
+            if (i === currentPage) btn.classList.add("active");
             btn.onclick = function () {
                 currentPage = i;
                 renderRooms();
@@ -307,7 +309,8 @@ function openChatBox() {
     if (!chatData[currentRoom.id]) {
         chatData[currentRoom.id] = [
             {
-                sender: "owner",text: "Tôi có thể trao đổi gì thêm với bạn?"
+                sender: "owner",
+                text: "Tôi có thể trao đổi gì thêm với bạn?"
             }
         ];
     }
@@ -403,7 +406,8 @@ document.addEventListener("DOMContentLoaded", function () {
         openContractModal();
     });
 
-    document.getElementById("contractClose").addEventListener("click", closeContractModal);document.getElementById("contractOverlay").addEventListener("click", closeContractModal);
+    document.getElementById("contractClose").addEventListener("click", closeContractModal);
+    document.getElementById("contractOverlay").addEventListener("click", closeContractModal);
 
     document.getElementById("contractForm").addEventListener("submit", function (e) {
         e.preventDefault();
