@@ -55,7 +55,6 @@ function getGalleryImages(folder) {
 
 function createRoom(id, title, area, price, address, size, desc, coverIndex) {
     const folder = getRoomFolder(price);
-
     return {
         id,
         title,
@@ -73,10 +72,7 @@ function createRoom(id, title, area, price, address, size, desc, coverIndex) {
 const roomsData = [];
 let roomId = 1;
 
-// Tạo 120 phòng:
-// 40 phòng 1tr5-2tr
-// 40 phòng 2tr-3tr
-// 40 phòng 3tr+
+// 120 phòng
 for (let i = 1; i <= 40; i++) {
     const area = randomItem(areas);
     const coverIndex = ((i - 1) % 11) + 1;
@@ -154,18 +150,22 @@ function displayRooms(rooms) {
     }
 
     rooms.forEach((room) => {
-        container.innerHTML += `
-            <div class="room-card" onclick="openRoomDetail(${room.id})">
-                <img src="${room.coverImage}" alt="${room.title}">
-                <div class="room-info">
-                    <h3>${room.title}</h3>
-                    <p>💰 Giá: ${formatPrice(room.price)} VNĐ</p>
-                    <p>📍 ${room.address}</p>
-                    <p>📌 Khu vực: ${room.area}</p>
-                    <span class="price-badge">${getPriceTag(room.price)}</span>
-                </div>
+        const card = document.createElement("div");
+        card.className = "room-card";
+        card.dataset.roomId = room.id;
+
+        card.innerHTML = `
+            <img src="${room.coverImage}" alt="${room.title}">
+            <div class="room-info">
+                <h3>${room.title}</h3>
+                <p>💰 Giá: ${formatPrice(room.price)} VNĐ</p>
+                <p>📍 ${room.address}</p>
+                <p>📌 Khu vực: ${room.area}</p>
+                <span class="price-badge">${getPriceTag(room.price)}</span>
             </div>
         `;
+
+        container.appendChild(card);
     });
 }
 
@@ -188,7 +188,6 @@ function createDots() {
 function renderPagination() {
     const pagination = document.getElementById("pagination");
     const totalPages = Math.ceil(filteredRooms.length / roomsPerPage);
-
     pagination.innerHTML = "";
 
     if (totalPages <= 1) return;
@@ -208,14 +207,12 @@ function renderPagination() {
         for (let i = 1; i <= totalPages; i++) {
             pagesToShow.push(i);
         }
+    } else if (currentPage <= 3) {
+        pagesToShow.push(1, 2, 3, 4, "dots", totalPages);
+    } else if (currentPage >= totalPages - 2) {
+        pagesToShow.push(1, "dots", totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
     } else {
-        if (currentPage <= 3) {
-            pagesToShow.push(1, 2, 3, 4, "dots", totalPages);
-        } else if (currentPage >= totalPages - 2) {
-            pagesToShow.push(1, "dots", totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
-        } else {
-            pagesToShow.push(1, "dots", currentPage - 1, currentPage, currentPage + 1, "dots", totalPages);
-        }
+        pagesToShow.push(1, "dots", currentPage - 1, currentPage, currentPage + 1, "dots", totalPages);
     }
 
     pagesToShow.forEach((item) => {
@@ -269,7 +266,7 @@ function searchRoom() {
     const selectedArea = document.getElementById("areaInput").value;
     const selectedPrice = parseInt(document.getElementById("priceInput").value, 10);
 
-    filteredRooms = roomsData.filter(function (room) {
+    filteredRooms = roomsData.filter((room) => {
         const matchArea = selectedArea === "" || room.area === selectedArea;
         const matchPrice = room.price <= selectedPrice;
         return matchArea && matchPrice;
@@ -280,7 +277,7 @@ function searchRoom() {
 }
 
 function openRoomDetail(roomId) {
-    const room = roomsData.find(item => item.id === roomId);
+    const room = roomsData.find((item) => item.id === Number(roomId));
     if (!room) return;
 
     currentRoom = room;
@@ -299,17 +296,18 @@ function openRoomDetail(roomId) {
     thumbGrid.innerHTML = "";
 
     room.galleryImages.forEach((imgSrc) => {
-        thumbGrid.innerHTML += `
-            <img src="${imgSrc}" class="thumb-item" onclick="changePreview('${imgSrc}')">
-        `;
+        const thumb = document.createElement("img");
+        thumb.src = imgSrc;
+        thumb.className = "thumb-item";
+        thumb.alt = room.title;
+        thumb.addEventListener("click", function () {
+            mainPreview.src = imgSrc;
+        });
+        thumbGrid.appendChild(thumb);
     });
 
     document.getElementById("roomModal").classList.remove("hidden");
     document.body.style.overflow = "hidden";
-}
-
-function changePreview(imgSrc) {
-    document.getElementById("mainPreview").src = imgSrc;
 }
 
 function closeRoomDetail() {
@@ -321,6 +319,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const priceInput = document.getElementById("priceInput");
     const searchBtn = document.getElementById("searchBtn");
     const areaInput = document.getElementById("areaInput");
+    const roomContainer = document.getElementById("roomContainer");
+
     const modalClose = document.getElementById("modalClose");
     const modalOverlay = document.getElementById("modalOverlay");
     const contactBtn = document.getElementById("contactBtn");
@@ -329,6 +329,12 @@ document.addEventListener("DOMContentLoaded", function () {
     priceInput.addEventListener("input", updatePrice);
     searchBtn.addEventListener("click", searchRoom);
     areaInput.addEventListener("change", searchRoom);
+
+    roomContainer.addEventListener("click", function (e) {
+        const card = e.target.closest(".room-card");
+        if (!card) return;
+        openRoomDetail(card.dataset.roomId);
+    });
 
     modalClose.addEventListener("click", closeRoomDetail);
     modalOverlay.addEventListener("click", closeRoomDetail);
