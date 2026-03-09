@@ -426,3 +426,52 @@ footer{
         flex-direction: column;
     }
 }
+.chat-box{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    overflow: hidden;
+    z-index: 2000;
+}
+
+.chat-header{
+    background:#2c7be5;
+    color:white;
+    padding:10px;
+    font-weight:bold;
+    display:flex;
+    justify-content:space-between;
+    cursor:pointer;
+}
+
+.chat-messages{
+    height:200px;
+    overflow-y:auto;
+    padding:10px;
+    font-size:14px;
+}
+
+.chat-input{
+    display:flex;
+}
+
+.chat-input input{
+    flex:1;
+    border:none;
+    padding:8px;
+}
+
+.chat-input button{
+    background:#2c7be5;
+    color:white;
+    border:none;
+    padding:8px 12px;
+}
+
+.hidden{
+    display:none;
+}
