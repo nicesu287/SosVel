@@ -16,7 +16,9 @@ const folderMap = {
     high: "tren3trieu"
 };
 
+const BASE_PATH = "/SosVel/project/pictures";
 const roomsPerPage = 12;
+
 let currentPage = 1;
 let filteredRooms = [];
 let currentRoom = null;
@@ -42,19 +44,20 @@ function getRoomFolder(price) {
 }
 
 function getCoverImage(folder, coverIndex) {
-    return `../pictures/${folder}/${coverIndex}.jpg`;
+    return `${BASE_PATH}/${folder}/${coverIndex}.jpg`;
 }
 
 function getGalleryImages(folder) {
     const images = [];
     for (let i = 12; i <= 48; i++) {
-        images.push(`../pictures/${folder}/${i}.jpg`);
+        images.push(`${BASE_PATH}/${folder}/${i}.jpg`);
     }
     return images;
 }
 
 function createRoom(id, title, area, price, address, size, desc, coverIndex) {
     const folder = getRoomFolder(price);
+
     return {
         id,
         title,
