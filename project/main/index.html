@@ -40,7 +40,7 @@
                 <div class="filter-item price-filter">
                     <label for="priceInput">
                         Giá tối đa:
-                        <span id="priceValue">1.000.000</span> VNĐ
+                        <span id="priceValue">5.000.000+</span> VNĐ
                     </label>
 
                     <input
@@ -50,7 +50,6 @@
                         max="5000000"
                         step="100000"
                         value="5000000"
-                        oninput="updatePrice()"
                     >
 
                     <div class="price-note">
@@ -60,7 +59,7 @@
                 </div>
 
                 <div class="filter-action">
-                    <button class="search-btn" onclick="searchRoom()">Tìm kiếm</button>
+                    <button type="button" class="search-btn" id="searchBtn">Tìm kiếm</button>
                 </div>
             </div>
         </div>
