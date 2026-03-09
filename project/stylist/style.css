@@ -289,7 +289,7 @@ header{
     background:#111827;
 }
 
-/* CONTRACT FORM */
+/* CONTRACT */
 
 .contract-form{
     display:flex;
@@ -320,6 +320,99 @@ header{
     margin-top:14px;
     color:#1b5edb;
     font-weight:bold;
+}
+
+.contract-doc-wrap{
+    max-width:900px;
+}
+
+.contract-document{
+    background:#fff;
+    border:1px solid #d9d9d9;
+    border-radius:12px;
+    padding:24px;
+    max-height:70vh;
+    overflow-y:auto;
+    line-height:1.65;
+}
+
+.contract-header{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.contract-header h2{
+    margin:10px 0 6px;
+    font-size:24px;
+}
+
+.contract-document h3{
+    margin-top:18px;
+    margin-bottom:8px;
+    font-size:18px;
+}
+
+.contract-document p{
+    margin:6px 0;
+}
+
+.signature-section{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+    margin-top:28px;
+}
+
+.signature-box{
+    text-align:center;
+}
+
+#signaturePad{
+    width:100%;
+    max-width:320px;
+    height:160px;
+    border:1px dashed #9aa4b2;
+    border-radius:10px;
+    background:#fff;
+    touch-action:none;
+}
+
+.owner-sign-placeholder{
+    height:160px;
+    border:1px dashed #c7cdd6;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#667085;
+    background:#fafafa;
+}
+
+.signature-actions{
+    margin-top:10px;
+}
+
+.contract-toolbar{
+    display:flex;
+    gap:12px;
+    justify-content:flex-end;
+    margin-top:18px;
+    flex-wrap:wrap;
+}
+
+.secondary-btn{
+    height:44px;
+    border:1px solid #cfd7e3;
+    background:white;
+    color:#1b5edb;
+    border-radius:10px;
+    padding:0 16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.secondary-btn:hover{
+    background:#f5f9ff;
 }
 
 /* CHAT */
@@ -522,5 +615,9 @@ footer{
     .main-nav{
         flex-direction:column;
         align-items:flex-start;
+    }
+
+    .signature-section{
+        grid-template-columns:1fr;
     }
 }
