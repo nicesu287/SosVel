@@ -222,38 +222,40 @@ input[type="range"]::-moz-range-thumb{
 }
 
 .pagination{
-    margin-top: 28px;
+    margin-top: 32px;
     display: flex;
     justify-content: center;
+    align-items: center;
     flex-wrap: wrap;
     gap: 10px;
 }
 
-.page-btn{
-    min-width: 46px;
-    height: 42px;
-    padding: 0 14px;
+.page-number,
+.page-text-btn{
     border: none;
-    border-radius: 10px;
-    background: white;
+    background: transparent;
     color: #1b5edb;
-    font-weight: 700;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    font-size: 18px;
+    font-weight: 500;
     cursor: pointer;
+    padding: 0;
+    line-height: 1;
 }
 
-.page-btn:hover{
-    background: #e8f1ff;
+.page-text-btn{
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 14px;
+}
+
+.page-number:hover,
+.page-text-btn:hover{
+    text-decoration: underline;
 }
 
 .active-page{
-    background: #2c7be5;
-    color: white;
-}
-
-.page-btn:disabled{
-    opacity: 0.45;
-    cursor: not-allowed;
+    color: #111827;
+    font-weight: 700;
 }
 
 footer{
