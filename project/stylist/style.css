@@ -263,6 +263,13 @@ input[type="range"]::-moz-range-thumb{
     font-weight: 700;
 }
 
+.page-dots{
+    color: #667085;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1;
+}
+
 footer{
     margin-top: 40px;
     background: white;
