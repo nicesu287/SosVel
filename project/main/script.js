@@ -17,7 +17,6 @@ const folderMap = {
     high: "tren3trieu"
 };
 
-// ✅ SỬA ĐƯỜNG DẪN
 const BASE_PATH = "../pictures";
 
 const roomsPerPage = 12;
@@ -34,36 +33,34 @@ function formatPrice(price) {
     return price.toLocaleString("vi-VN");
 }
 
-function getPriceTag(price) {
-    if (price >= 1500000 && price <= 2000000) return "1tr5 - 2tr";
-    if (price > 2000000 && price <= 3000000) return "2tr - 3tr";
-    return "3tr+";
-}
-
 function getRoomFolder(price) {
-    if (price >= 1500000 && price <= 2000000) return folderMap.low;
-    if (price > 2000000 && price <= 3000000) return folderMap.mid;
+
+    if (price <= 2000000) return folderMap.low;
+    if (price <= 3000000) return folderMap.mid;
     return folderMap.high;
+
 }
 
-function getCoverImage(folder, coverIndex) {
-    return `${BASE_PATH}/${folder}/${coverIndex}.jpg`;
+function getCoverImage(folder, index) {
+
+    return `${BASE_PATH}/${folder}/${index}.jpg`;
+
 }
 
-function getGalleryImages(folder, roomId) {
+function getGalleryImages(folder, id) {
 
-    const range = 37;
-    const offset = (roomId * 3) % range;
+    const range = 30;
 
-    const img1 = 12 + (offset % range);
-    const img2 = 12 + ((offset + 1) % range);
-    const img3 = 12 + ((offset + 2) % range);
+    const a = (id * 2) % range;
+    const b = (id * 3) % range;
+    const c = (id * 5) % range;
 
     return [
-        `${BASE_PATH}/${folder}/${img1}.jpg`,
-        `${BASE_PATH}/${folder}/${img2}.jpg`,
-        `${BASE_PATH}/${folder}/${img3}.jpg`
+        `${BASE_PATH}/${folder}/${a + 1}.jpg`,
+        `${BASE_PATH}/${folder}/${b + 1}.jpg`,
+        `${BASE_PATH}/${folder}/${c + 1}.jpg`
     ];
+
 }
 
 function createRoom(
@@ -98,62 +95,36 @@ const roomsData = [];
 
 let roomId = 1;
 
-for (let i = 1; i <= 40; i++) {
+
+for (let i = 1; i <= 120; i++) {
 
     const area = randomItem(areas);
-    const coverIndex = ((i - 1) % 11) + 1;
+
+    const price =
+        i < 40
+            ? 1800000
+            : i < 80
+            ? 2500000
+            : 3500000;
+
+    const coverIndex = ((i - 1) % 10) + 1;
 
     roomsData.push(
         createRoom(
             roomId++,
-            `Phòng sinh viên giá tốt ${i}`,
+            "Phòng sinh viên",
             area,
-            1500000 + ((i - 1) % 6) * 100000,
+            price,
             `${10 + i}, ${randomItem(streets)}, ${area}`,
             `${16 + (i % 6)}m²`,
-            "Phòng sạch sẽ, phù hợp sinh viên",
+            "Phòng sạch đẹp",
             coverIndex
         )
     );
+
 }
 
-for (let i = 1; i <= 40; i++) {
 
-    const area = randomItem(areas);
-    const coverIndex = ((i - 1) % 11) + 1;
-
-    roomsData.push(
-        createRoom(
-            roomId++,
-            `Phòng tiện nghi ${i}`,
-            area,
-            2200000 + ((i - 1) % 5) * 200000,
-            `${50 + i}, ${randomItem(streets)}, ${area}`,
-            `${18 + (i % 7)}m²`,
-            "Phòng tiện nghi",
-            coverIndex
-        )
-    );
-}
-
-for (let i = 1; i <= 40; i++) {
-
-    const area = randomItem(areas);
-    const coverIndex = ((i - 1) % 11) + 1;
-
-    roomsData.push(
-        createRoom(
-            roomId++,
-            `Phòng cao cấp ${i}`,
-            area,
-            3200000 + ((i - 1) % 6) * 400000,
-            `${90 + i}, ${randomItem(streets)}, ${area}`,
-            `${22 + (i % 8)}m²`,
-            "Phòng rộng",
-            coverIndex
-        )
-    );
-}
 
 function updatePrice() {
 
@@ -164,12 +135,11 @@ function updatePrice() {
         document.getElementById("priceValue");
 
     const price =
-        parseInt(priceInput.value, 10);
+        parseInt(priceInput.value);
 
     if (price >= 5000000) {
 
-        priceValue.textContent =
-            "5.000.000+";
+        priceValue.textContent = "5.000.000+";
 
     } else {
 
@@ -180,12 +150,133 @@ function updatePrice() {
 
 }
 
-function openRoomDetail(roomId) {
+
+
+function filterRooms() {
+
+    const area =
+        document.getElementById("areaInput").value;
+
+    const maxPrice =
+        parseInt(
+            document.getElementById("priceInput").value
+        );
+
+    filteredRooms =
+        roomsData.filter(room => {
+
+            const okArea =
+                !area || room.area === area;
+
+            const okPrice =
+                room.price <= maxPrice;
+
+            return okArea && okPrice;
+
+        });
+
+    currentPage = 1;
+
+    renderRooms();
+
+    renderPagination();
+
+}
+
+
+
+function renderRooms() {
+
+    const container =
+        document.getElementById("roomContainer");
+
+    container.innerHTML = "";
+
+    const start =
+        (currentPage - 1) * roomsPerPage;
+
+    const end =
+        start + roomsPerPage;
+
+    const pageRooms =
+        filteredRooms.slice(start, end);
+
+    pageRooms.forEach(room => {
+
+        const div =
+            document.createElement("div");
+
+        div.className = "room-card";
+
+        div.innerHTML = `
+
+            <img src="${room.coverImage}">
+
+            <h3>${room.title}</h3>
+
+            <p>${room.area}</p>
+
+            <p>${formatPrice(room.price)} VNĐ</p>
+
+            <button onclick="openRoomDetail(${room.id})">
+                Xem chi tiết
+            </button>
+
+        `;
+
+        container.appendChild(div);
+
+    });
+
+}
+
+
+
+function renderPagination() {
+
+    const pagination =
+        document.getElementById("pagination");
+
+    pagination.innerHTML = "";
+
+    const total =
+        Math.ceil(
+            filteredRooms.length /
+            roomsPerPage
+        );
+
+    for (let i = 1; i <= total; i++) {
+
+        const btn =
+            document.createElement("button");
+
+        btn.textContent = i;
+
+        if (i === currentPage)
+            btn.classList.add("active");
+
+        btn.onclick = () => {
+
+            currentPage = i;
+
+            renderRooms();
+
+            renderPagination();
+
+        };
+
+        pagination.appendChild(btn);
+
+    }
+
+}
+
+
+
+function openRoomDetail(id) {
 
     const room =
-        roomsData.find(
-            r => r.id == roomId
-        );
+        roomsData.find(r => r.id == id);
 
     if (!room) return;
 
@@ -193,7 +284,8 @@ function openRoomDetail(roomId) {
 
     document.getElementById(
         "modalTitle"
-    ).textContent = room.title;
+    ).textContent =
+        room.title;
 
     document.getElementById(
         "modalPrice"
@@ -201,65 +293,111 @@ function openRoomDetail(roomId) {
         formatPrice(room.price);
 
     document.getElementById(
+        "modalArea"
+    ).textContent =
+        room.area;
+
+    document.getElementById(
+        "modalAddress"
+    ).textContent =
+        room.address;
+
+    document.getElementById(
+        "modalSize"
+    ).textContent =
+        room.size;
+
+    document.getElementById(
+        "modalDesc"
+    ).textContent =
+        room.desc;
+
+    document.getElementById(
         "mainPreview"
     ).src =
         room.galleryImages[0];
 
-    const thumbGrid =
+    const thumb =
         document.getElementById(
             "thumbGrid"
         );
 
-    thumbGrid.innerHTML = "";
+    thumb.innerHTML = "";
 
-    room.galleryImages.forEach(
-        img => {
+    room.galleryImages.forEach(img => {
 
-            const el =
-                document.createElement(
-                    "img"
-                );
+        const el =
+            document.createElement("img");
 
-            el.src = img;
+        el.src = img;
 
-            el.onclick = () => {
+        el.onclick = () => {
 
-                document.getElementById(
-                    "mainPreview"
-                ).src = img;
+            document.getElementById(
+                "mainPreview"
+            ).src = img;
 
-            };
+        };
 
-            thumbGrid.appendChild(
-                el
-            );
+        thumb.appendChild(el);
 
-        }
-    );
+    });
 
     document
-        .getElementById(
-            "roomModal"
-        )
-        .classList
-        .remove("hidden");
+        .getElementById("roomModal")
+        .classList.remove("hidden");
 
 }
+
+
 
 function closeRoomDetail() {
 
     document
-        .getElementById(
-            "roomModal"
-        )
-        .classList
-        .add("hidden");
+        .getElementById("roomModal")
+        .classList.add("hidden");
 
 }
+
+
 
 document.addEventListener(
     "DOMContentLoaded",
     function () {
+
+        filteredRooms = roomsData;
+
+        updatePrice();
+
+        renderRooms();
+
+        renderPagination();
+
+
+
+        document
+            .getElementById("priceInput")
+            .oninput = updatePrice;
+
+
+
+        document
+            .getElementById("searchBtn")
+            .onclick = filterRooms;
+
+
+
+        document
+            .getElementById("modalClose")
+            .onclick = closeRoomDetail;
+
+
+
+        document
+            .getElementById("modalOverlay")
+            .onclick = closeRoomDetail;
+
+
 
         const contactBtn =
             document.getElementById(
@@ -291,22 +429,6 @@ document.addEventListener(
                 "chatClose"
             );
 
-        window.openChatBox =
-            function () {
-
-                chatBox
-                    .classList
-                    .remove(
-                        "hidden"
-                    );
-
-                addMessage(
-                    "Bot",
-                    "Vui lòng chờ môi giới"
-                );
-
-            };
-
         function addMessage(
             sender,
             text
@@ -318,16 +440,37 @@ document.addEventListener(
                 );
 
             div.textContent =
-                sender +
-                ": " +
-                text;
+                sender + ": " + text;
 
-            chatMessages
-                .appendChild(
-                    div
-                );
+            chatMessages.appendChild(
+                div
+            );
 
         }
+
+        function openChat() {
+
+            chatBox.classList.remove(
+                "hidden"
+            );
+
+            addMessage(
+                "Bot",
+                "Chào bạn"
+            );
+
+        }
+
+        contactBtn.onclick =
+            function () {
+
+                alert(
+                    "SĐT: 0901234567"
+                );
+
+                openChat();
+
+            };
 
         sendChat.onclick =
             function () {
@@ -350,22 +493,9 @@ document.addEventListener(
         chatClose.onclick =
             function () {
 
-                chatBox
-                    .classList
-                    .add(
-                        "hidden"
-                    );
-
-            };
-
-        contactBtn.onclick =
-            function () {
-
-                alert(
-                    "SĐT: 0901234567"
+                chatBox.classList.add(
+                    "hidden"
                 );
-
-                openChatBox();
 
             };
 
