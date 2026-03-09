@@ -14,11 +14,18 @@
     <p>Nền tảng tìm trọ dành cho sinh viên</p>
 </header>
 
-<nav>
-    <a href="#">Trang chủ</a>
-    <a href="#">Tìm phòng</a>
-    <a href="#">Đăng phòng</a>
-    <a href="#">Liên hệ</a>
+<nav class="main-nav">
+    <div class="nav-left">
+        <a href="#">Trang chủ</a>
+        <a href="#">Tìm phòng</a>
+        <a href="#">Đăng phòng</a>
+        <a href="#">Liên hệ</a>
+    </div>
+
+    <div class="nav-right" id="authNav">
+        <a href="login.html">Đăng nhập</a>
+        <a href="register.html">Đăng ký</a>
+    </div>
 </nav>
 
 <div class="container">
@@ -80,7 +87,7 @@
     <div class="pagination" id="pagination"></div>
 </div>
 
-<!-- ================= MODAL CHI TIẾT PHÒNG ================= -->
+<!-- MODAL CHI TIẾT PHÒNG -->
 <div class="modal hidden" id="roomModal">
     <div class="modal-overlay" id="modalOverlay"></div>
 
@@ -116,7 +123,7 @@
                     </button>
 
                     <button id="contractBtn" class="contract-btn" type="button">
-                        Kí hợp đồng cọc online
+                        Kí hợp đồng online
                     </button>
                 </div>
             </div>
@@ -124,7 +131,7 @@
     </div>
 </div>
 
-<!-- ================= MODAL CỌC ONLINE ================= -->
+<!-- MODAL CỌC ONLINE -->
 <div class="modal hidden" id="contractModal">
     <div class="modal-overlay" id="contractOverlay"></div>
 
@@ -137,13 +144,16 @@
 
         <form id="contractForm" class="contract-form">
             <label for="tenantName">Họ và tên</label>
-            <input id="tenantName" type="text" placeholder="Nhập họ và tên" required>
+            <input id="tenantName" type="text" readonly>
+
+            <label for="tenantDob">Ngày tháng năm sinh</label>
+            <input id="tenantDob" type="text" readonly>
+
+            <label for="tenantCccd">CCCD</label>
+            <input id="tenantCccd" type="text" readonly>
 
             <label for="tenantPhone">Số điện thoại</label>
-            <input id="tenantPhone" type="text" placeholder="Nhập số điện thoại" required>
-
-            <label for="tenantCccd">CCCD / CMND</label>
-            <input id="tenantCccd" type="text" placeholder="Nhập CCCD / CMND" required>
+            <input id="tenantPhone" type="text" readonly>
 
             <label for="depositAmount">Số tiền cọc</label>
             <input id="depositAmount" type="text" readonly>
@@ -157,7 +167,7 @@
     </div>
 </div>
 
-<!-- ================= CHAT BOX GÓC PHẢI ================= -->
+<!-- CHAT BOX -->
 <div id="chatBox" class="chat-box hidden">
     <div class="chat-header">
         <div>
@@ -183,6 +193,7 @@
     <p>© 2026 SosVel</p>
 </footer>
 
+<script src="auth.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
