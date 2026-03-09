@@ -4,124 +4,312 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SosVel</title>
+
     <link rel="stylesheet" href="../stylist/style.css">
+
 </head>
+
 <body>
-    <header>
-        <h1>SosVel</h1>
-        <p>Nền tảng tìm trọ dành cho sinh viên</p>
-    </header>
 
-    <nav>
-        <a href="#">Trang chủ</a>
-        <a href="#">Tìm phòng</a>
-        <a href="#">Đăng phòng</a>
-        <a href="#">Liên hệ</a>
-    </nav>
+<header>
+    <h1>SosVel</h1>
+    <p>Nền tảng tìm trọ dành cho sinh viên</p>
+</header>
 
-    <div class="container">
-        <div class="search-box">
-            <h2>Tìm phòng trọ</h2>
 
-            <div class="filter-bar">
-                <div class="filter-item">
-                    <label for="areaInput">Khu vực</label>
-                    <select id="areaInput">
-                        <option value="">Tất cả khu vực</option>
-                        <option value="Đông Hòa">Đông Hòa</option>
-                        <option value="Dĩ An">Dĩ An</option>
-                        <option value="Thủ Đức">Thủ Đức</option>
-                        <option value="Suối Tiên">Suối Tiên</option>
-                        <option value="Linh Trung">Linh Trung</option>
-                        <option value="Bình Thọ">Bình Thọ</option>
-                    </select>
-                </div>
+<nav>
+    <a href="#">Trang chủ</a>
+    <a href="#">Tìm phòng</a>
+    <a href="#">Đăng phòng</a>
+    <a href="#">Liên hệ</a>
+</nav>
 
-                <div class="filter-item price-filter">
-                    <label for="priceInput">
-                        Giá tối đa:
-                        <span id="priceValue">5.000.000+</span> VNĐ
-                    </label>
 
-                    <input
-                        type="range"
-                        id="priceInput"
-                        min="1000000"
-                        max="5000000"
-                        step="100000"
-                        value="5000000"
-                    >
 
-                    <div class="price-note">
-                        <span>1tr</span>
-                        <span>5tr+</span>
-                    </div>
-                </div>
+<div class="container">
 
-                <div class="filter-action">
-                    <button type="button" class="search-btn" id="searchBtn">Tìm kiếm</button>
-                </div>
+    <div class="search-box">
+
+        <h2>Tìm phòng trọ</h2>
+
+        <div class="filter-bar">
+
+
+            <div class="filter-item">
+
+                <label for="areaInput">
+                    Khu vực
+                </label>
+
+                <select id="areaInput">
+
+                    <option value="">
+                        Tất cả khu vực
+                    </option>
+
+                    <option value="Đông Hòa">
+                        Đông Hòa
+                    </option>
+
+                    <option value="Dĩ An">
+                        Dĩ An
+                    </option>
+
+                    <option value="Thủ Đức">
+                        Thủ Đức
+                    </option>
+
+                    <option value="Suối Tiên">
+                        Suối Tiên
+                    </option>
+
+                    <option value="Linh Trung">
+                        Linh Trung
+                    </option>
+
+                    <option value="Bình Thọ">
+                        Bình Thọ
+                    </option>
+
+                </select>
+
             </div>
+
+
+
+            <div class="filter-item price-filter">
+
+                <label for="priceInput">
+
+                    Giá tối đa:
+
+                    <span id="priceValue">
+                        5.000.000+
+                    </span>
+
+                    VNĐ
+
+                </label>
+
+
+                <input
+                    type="range"
+                    id="priceInput"
+                    min="1000000"
+                    max="5000000"
+                    step="100000"
+                    value="5000000"
+                >
+
+
+                <div class="price-note">
+
+                    <span>1tr</span>
+                    <span>5tr+</span>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="filter-action">
+
+                <button
+                    type="button"
+                    id="searchBtn"
+                    class="search-btn"
+                >
+                    Tìm kiếm
+                </button>
+
+            </div>
+
+
         </div>
 
-        <div class="rooms" id="roomContainer"></div>
-        <div class="pagination" id="pagination"></div>
     </div>
 
-    <div class="modal hidden" id="roomModal">
-        <div class="modal-overlay" id="modalOverlay"></div>
-        <div class="modal-content">
-            <button class="modal-close" id="modalClose" type="button">&times;</button>
 
-            <div class="modal-grid">
-                <div class="modal-left">
-                    <img id="mainPreview" class="main-preview" src="" alt="Ảnh phòng">
-                    <div class="thumb-grid" id="thumbGrid"></div>
-                </div>
 
-                <div class="modal-right">
-                    <h2 id="modalTitle">Chi tiết phòng</h2>
-                    <p id="modalPrice"></p>
-                    <p id="modalArea"></p>
-                    <p id="modalAddress"></p>
-                    <p id="modalSize"></p>
-                    <p id="modalDesc"></p>
+    <div
+        class="rooms"
+        id="roomContainer"
+    ></div>
 
-                    <div class="feature-list">
-                        <span>✅ Điện nước minh bạch</span>
-                        <span>✅ Gần trường / bến xe</span>
-                        <span>✅ Khu vực an ninh</span>
-                        <span>✅ Có chỗ để xe</span>
-                    </div>
 
-                    <div class="modal-actions">
-                        <button class="contact-btn" id="contactBtn" type="button">Liên hệ</button>
-                        <button class="contract-btn" id="contractBtn" type="button">Kí hợp đồng online</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div
+        class="pagination"
+        id="pagination"
+    ></div>
 
-    <footer>
-        <p>© 2026 SosVel</p>
-    </footer>
-
-    <script src="script.js"></script>
-    <div id="chatBox" class="chat-box hidden">
-
-    <div class="chat-header">
-        Chat với môi giới
-        <span id="chatClose">✖</span>
-    </div>
-
-    <div id="chatMessages" class="chat-messages"></div>
-
-    <div class="chat-input">
-        <input id="chatInput" type="text" placeholder="Nhập tin nhắn...">
-        <button id="sendChat">Gửi</button>
-    </div>
 
 </div>
+
+
+
+<!-- ================= MODAL PHÒNG ================= -->
+
+<div
+    class="modal hidden"
+    id="roomModal"
+>
+
+    <div
+        class="modal-overlay"
+        id="modalOverlay"
+    ></div>
+
+
+    <div class="modal-content">
+
+
+        <button
+            id="modalClose"
+            class="modal-close"
+            type="button"
+        >
+            ×
+        </button>
+
+
+
+        <div class="modal-grid">
+
+
+            <div class="modal-left">
+
+                <img
+                    id="mainPreview"
+                    class="main-preview"
+                    src=""
+                >
+
+                <div
+                    id="thumbGrid"
+                    class="thumb-grid"
+                ></div>
+
+            </div>
+
+
+
+            <div class="modal-right">
+
+
+                <h2 id="modalTitle">
+                    Chi tiết phòng
+                </h2>
+
+                <p id="modalPrice"></p>
+                <p id="modalArea"></p>
+                <p id="modalAddress"></p>
+                <p id="modalSize"></p>
+                <p id="modalDesc"></p>
+
+
+
+                <div class="feature-list">
+
+                    <span>✅ Điện nước minh bạch</span>
+                    <span>✅ Gần trường</span>
+                    <span>✅ Khu vực an ninh</span>
+                    <span>✅ Có chỗ để xe</span>
+
+                </div>
+
+
+
+                <div class="modal-actions">
+
+                    <button
+                        id="contactBtn"
+                        class="contact-btn"
+                        type="button"
+                    >
+                        Liên hệ
+                    </button>
+
+
+                    <button
+                        id="contractBtn"
+                        class="contract-btn"
+                        type="button"
+                    >
+                        Kí hợp đồng online
+                    </button>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- ================= CHAT BOX GÓC PHẢI ================= -->
+
+<div
+    id="chatBox"
+    class="chat-box hidden"
+>
+
+    <div class="chat-header">
+
+        Chat với chủ nhà
+
+        <span id="chatClose">
+            ✖
+        </span>
+
+    </div>
+
+
+
+    <div
+        id="chatMessages"
+        class="chat-messages"
+    >
+
+    </div>
+
+
+
+    <div class="chat-input">
+
+        <input
+            id="chatInput"
+            type="text"
+            placeholder="Nhập tin nhắn..."
+        >
+
+        <button id="sendChat">
+            Gửi
+        </button>
+
+    </div>
+
+
+</div>
+
+
+
+<footer>
+    <p>© 2026 SosVel</p>
+</footer>
+
+
+
+<script src="script.js"></script>
+
+
 </body>
 </html>
