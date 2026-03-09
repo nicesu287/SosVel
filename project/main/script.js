@@ -14,18 +14,18 @@ const roomsData = [
 ];
 
 function updatePrice() {
-    const price = parseInt(document.getElementById("priceInput").value);
+    const price = parseInt(document.getElementById("priceInput").value, 10);
 
     if (price >= 5000000) {
         document.getElementById("priceValue").innerText = "5,000,000+";
     } else {
-        document.getElementById("priceValue").innerText = price.toLocaleString();
+        document.getElementById("priceValue").innerText = price.toLocaleString("vi-VN");
     }
 }
 
 function searchRoom() {
     const area = document.getElementById("areaInput").value;
-    const price = parseInt(document.getElementById("priceInput").value);
+    const price = parseInt(document.getElementById("priceInput").value, 10);
 
     const result = roomsData.filter(room => {
         const matchArea = area === "" || room.area === area;
@@ -62,7 +62,7 @@ function displayRooms(rooms) {
                 <img src="../pictures/room.jpg" alt="Phòng trọ">
                 <div class="room-info">
                     <h3>Phòng trọ sinh viên</h3>
-                    <p>💰 Giá: ${room.price.toLocaleString()} VNĐ</p>
+                    <p>💰 Giá: ${room.price.toLocaleString("vi-VN")} VNĐ</p>
                     <p>📍 ${room.address}</p>
                     <p>📌 Khu vực: ${room.area}</p>
                 </div>
