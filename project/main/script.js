@@ -15,15 +15,24 @@ const roomsData = [
 
 displayRooms(roomsData);
 
+function updatePrice(){
+
+let price = document.getElementById("priceInput").value;
+
+document.getElementById("priceValue").innerText =
+Number(price).toLocaleString();
+
+}
+
 function searchRoom(){
 
 let area = document.getElementById("areaInput").value.toLowerCase();
-let price = document.getElementById("priceInput").value;
+let price = parseInt(document.getElementById("priceInput").value);
 
 let result = roomsData.filter(room=>{
 
 let matchArea = room.area.toLowerCase().includes(area);
-let matchPrice = price=="" || room.price <= price;
+let matchPrice = room.price <= price;
 
 return matchArea && matchPrice;
 
