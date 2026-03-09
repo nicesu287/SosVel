@@ -68,6 +68,43 @@
         <div class="pagination" id="pagination"></div>
     </div>
 
+    <!-- Modal chi tiết phòng -->
+    <div class="modal hidden" id="roomModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">&times;</button>
+
+            <div class="modal-grid">
+                <div class="modal-left">
+                    <img id="mainPreview" class="main-preview" src="" alt="Ảnh phòng">
+
+                    <div class="thumb-grid" id="thumbGrid"></div>
+                </div>
+
+                <div class="modal-right">
+                    <h2 id="modalTitle">Chi tiết phòng</h2>
+                    <p id="modalPrice"></p>
+                    <p id="modalArea"></p>
+                    <p id="modalAddress"></p>
+                    <p id="modalSize"></p>
+                    <p id="modalDesc"></p>
+
+                    <div class="feature-list">
+                        <span>✅ Điện nước minh bạch</span>
+                        <span>✅ Gần trường / bến xe</span>
+                        <span>✅ Khu vực an ninh</span>
+                        <span>✅ Có chỗ để xe</span>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button class="contact-btn" id="contactBtn">Liên hệ</button>
+                        <button class="contract-btn" id="contractBtn">Kí hợp đồng online</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <p>© 2026 SosVel</p>
     </footer>
