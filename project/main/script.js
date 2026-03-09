@@ -385,3 +385,54 @@ document.addEventListener("DOMContentLoaded", function () {
     filteredRooms = [...roomsData];
     renderPage();
 });
+const chatBox = document.getElementById("chatBox");
+const chatMessages = document.getElementById("chatMessages");
+const chatInput = document.getElementById("chatInput");
+const sendChat = document.getElementById("sendChat");
+const chatClose = document.getElementById("chatClose");
+
+function openChatBox() {
+    chatBox.classList.remove("hidden");
+
+    addMessage(
+        "Bot",
+        "Vui lòng hãy chờ 1 chút, người môi giới sẽ trả lời bạn sớm nhất"
+    );
+}
+
+function addMessage(sender, text) {
+
+    const div = document.createElement("div");
+
+    div.textContent = sender + ": " + text;
+
+    chatMessages.appendChild(div);
+
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+}
+
+sendChat.addEventListener("click", function () {
+
+    const text = chatInput.value;
+
+    if (text === "") return;
+
+    addMessage("Bạn", text);
+
+    chatInput.value = "";
+
+    setTimeout(() => {
+
+        addMessage(
+            "Bot",
+            "Vui lòng hãy chờ 1 chút, người môi giới sẽ trả lời bạn sớm nhất"
+        );
+
+    }, 1000);
+
+});
+
+chatClose.addEventListener("click", function () {
+    chatBox.classList.add("hidden");
+});
