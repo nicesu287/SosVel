@@ -24,27 +24,40 @@
         <div class="search-box">
             <h2>Tìm phòng trọ</h2>
 
-            <input id="areaInput" type="text" placeholder="Nhập khu vực">
+            <div class="filter-group">
+                <div class="filter-item">
+                    <label for="areaInput">Khu vực</label>
+                    <select id="areaInput">
+                        <option value="">Tất cả khu vực</option>
+                        <option value="Đông Hòa">Đông Hòa</option>
+                        <option value="Dĩ An">Dĩ An</option>
+                        <option value="Thủ Đức">Thủ Đức</option>
+                        <option value="Suối Tiên">Suối Tiên</option>
+                        <option value="Linh Trung">Linh Trung</option>
+                        <option value="Bình Thọ">Bình Thọ</option>
+                    </select>
+                </div>
 
-            <div class="price-box">
-                <label for="priceInput">
-                    Giá tối đa:
-                    <span id="priceValue">1,000,000</span> VNĐ
-                </label>
+                <div class="filter-item price-item">
+                    <label for="priceInput">
+                        Giá tối đa:
+                        <span id="priceValue">1,000,000</span> VNĐ
+                    </label>
 
-                <input
-                    type="range"
-                    id="priceInput"
-                    min="100000"
-                    max="3000000"
-                    step="100000"
-                    value="1000000"
-                    oninput="updatePrice()"
-                >
+                    <input
+                        type="range"
+                        id="priceInput"
+                        min="1000000"
+                        max="5000000"
+                        step="100000"
+                        value="1000000"
+                        oninput="updatePrice()"
+                    >
 
-                <div class="price-note">
-                    <span>100k</span>
-                    <span>3tr+</span>
+                    <div class="price-note">
+                        <span>1tr</span>
+                        <span>5tr+</span>
+                    </div>
                 </div>
             </div>
 
