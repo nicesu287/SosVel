@@ -95,7 +95,6 @@ const roomsData = [];
 
 let roomId = 1;
 
-
 for (let i = 1; i <= 120; i++) {
 
     const area = randomItem(areas);
@@ -124,8 +123,6 @@ for (let i = 1; i <= 120; i++) {
 
 }
 
-
-
 function updatePrice() {
 
     const priceInput =
@@ -149,8 +146,6 @@ function updatePrice() {
     }
 
 }
-
-
 
 function filterRooms() {
 
@@ -183,8 +178,6 @@ function filterRooms() {
 
 }
 
-
-
 function renderRooms() {
 
     const container =
@@ -209,19 +202,13 @@ function renderRooms() {
         div.className = "room-card";
 
         div.innerHTML = `
-
             <img src="${room.coverImage}">
-
             <h3>${room.title}</h3>
-
             <p>${room.area}</p>
-
             <p>${formatPrice(room.price)} VNĐ</p>
-
             <button onclick="openRoomDetail(${room.id})">
                 Xem chi tiết
             </button>
-
         `;
 
         container.appendChild(div);
@@ -229,8 +216,6 @@ function renderRooms() {
     });
 
 }
-
-
 
 function renderPagination() {
 
@@ -271,8 +256,6 @@ function renderPagination() {
 
 }
 
-
-
 function openRoomDetail(id) {
 
     const room =
@@ -282,52 +265,24 @@ function openRoomDetail(id) {
 
     currentRoom = room;
 
-    document.getElementById(
-        "modalTitle"
-    ).textContent =
-        room.title;
+    document.getElementById("modalTitle").textContent = room.title;
+    document.getElementById("modalPrice").textContent = formatPrice(room.price);
+    document.getElementById("modalArea").textContent = room.area;
+    document.getElementById("modalAddress").textContent = room.address;
+    document.getElementById("modalSize").textContent = room.size;
+    document.getElementById("modalDesc").textContent = room.desc;
 
-    document.getElementById(
-        "modalPrice"
-    ).textContent =
-        formatPrice(room.price);
-
-    document.getElementById(
-        "modalArea"
-    ).textContent =
-        room.area;
-
-    document.getElementById(
-        "modalAddress"
-    ).textContent =
-        room.address;
-
-    document.getElementById(
-        "modalSize"
-    ).textContent =
-        room.size;
-
-    document.getElementById(
-        "modalDesc"
-    ).textContent =
-        room.desc;
-
-    document.getElementById(
-        "mainPreview"
-    ).src =
+    document.getElementById("mainPreview").src =
         room.galleryImages[0];
 
     const thumb =
-        document.getElementById(
-            "thumbGrid"
-        );
+        document.getElementById("thumbGrid");
 
     thumb.innerHTML = "";
 
     room.galleryImages.forEach(img => {
 
-        const el =
-            document.createElement("img");
+        const el = document.createElement("img");
 
         el.src = img;
 
@@ -347,9 +302,22 @@ function openRoomDetail(id) {
         .getElementById("roomModal")
         .classList.remove("hidden");
 
+    // FIX CHAT
+
+    const contactBtn =
+        document.getElementById("contactBtn");
+
+    contactBtn.onclick = function () {
+
+        alert("SĐT: 0901234567");
+
+        document
+            .getElementById("chatBox")
+            .classList.remove("hidden");
+
+    };
+
 }
-
-
 
 function closeRoomDetail() {
 
@@ -358,8 +326,6 @@ function closeRoomDetail() {
         .classList.add("hidden");
 
 }
-
-
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -373,129 +339,29 @@ document.addEventListener(
 
         renderPagination();
 
-
-
         document
             .getElementById("priceInput")
             .oninput = updatePrice;
-
-
 
         document
             .getElementById("searchBtn")
             .onclick = filterRooms;
 
-
-
         document
             .getElementById("modalClose")
             .onclick = closeRoomDetail;
-
-
 
         document
             .getElementById("modalOverlay")
             .onclick = closeRoomDetail;
 
+        document
+            .getElementById("chatClose")
+            .onclick = function () {
 
-
-        const contactBtn =
-            document.getElementById(
-                "contactBtn"
-            );
-
-        const chatBox =
-            document.getElementById(
-                "chatBox"
-            );
-
-        const chatMessages =
-            document.getElementById(
-                "chatMessages"
-            );
-
-        const chatInput =
-            document.getElementById(
-                "chatInput"
-            );
-
-        const sendChat =
-            document.getElementById(
-                "sendChat"
-            );
-
-        const chatClose =
-            document.getElementById(
-                "chatClose"
-            );
-
-        function addMessage(
-            sender,
-            text
-        ) {
-
-            const div =
-                document.createElement(
-                    "div"
-                );
-
-            div.textContent =
-                sender + ": " + text;
-
-            chatMessages.appendChild(
-                div
-            );
-
-        }
-
-        function openChat() {
-
-            chatBox.classList.remove(
-                "hidden"
-            );
-
-            addMessage(
-                "Bot",
-                "Chào bạn"
-            );
-
-        }
-
-        contactBtn.onclick =
-            function () {
-
-                alert(
-                    "SĐT: 0901234567"
-                );
-
-                openChat();
-
-            };
-
-        sendChat.onclick =
-            function () {
-
-                const text =
-                    chatInput.value;
-
-                if (!text) return;
-
-                addMessage(
-                    "Bạn",
-                    text
-                );
-
-                chatInput.value =
-                    "";
-
-            };
-
-        chatClose.onclick =
-            function () {
-
-                chatBox.classList.add(
-                    "hidden"
-                );
+                document
+                    .getElementById("chatBox")
+                    .classList.add("hidden");
 
             };
 
