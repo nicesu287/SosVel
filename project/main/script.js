@@ -1,7 +1,13 @@
 const areas = ["Đông Hòa", "Dĩ An", "Thủ Đức", "Suối Tiên", "Linh Trung", "Bình Thọ"];
 const streets = [
-    "Đường số 1", "Đường số 5", "Đường số 7", "Tân Lập",
-    "Thống Nhất", "Lê Văn Việt", "Kha Vạn Cân", "Hoàng Diệu 2"
+    "Đường số 1",
+    "Đường số 5",
+    "Đường số 7",
+    "Tân Lập",
+    "Thống Nhất",
+    "Lê Văn Việt",
+    "Kha Vạn Cân",
+    "Hoàng Diệu 2"
 ];
 
 const roomsPerPage = 12;
@@ -12,13 +18,22 @@ function randomItem(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
+function formatPrice(price) {
+    return price.toLocaleString("vi-VN");
+}
+
 function createRoom(title, area, price, address) {
-    return { title, area, price, address };
+    return {
+        title,
+        area,
+        price,
+        address
+    };
 }
 
 const roomsData = [];
 
-// 10 trang, mỗi trang 12 phòng:
+// Tạo 10 trang, mỗi trang 12 phòng:
 // 4 phòng 1tr5-2tr
 // 4 phòng 2tr-3tr
 // 4 phòng 3tr+
@@ -60,25 +75,26 @@ for (let page = 1; page <= 10; page++) {
     }
 }
 
-function formatPrice(price) {
-    return price.toLocaleString("vi-VN");
+function getPriceTag(price) {
+    if (price >= 1500000 && price <= 2000000) {
+        return "1tr5 - 2tr";
+    }
+    if (price > 2000000 && price <= 3000000) {
+        return "2tr - 3tr";
+    }
+    return "3tr+";
 }
 
 function updatePrice() {
-    const price = parseInt(document.getElementById("priceInput").value, 10);
+    const priceInput = document.getElementById("priceInput");
     const priceValue = document.getElementById("priceValue");
+    const price = parseInt(priceInput.value, 10);
 
     if (price >= 5000000) {
         priceValue.textContent = "5.000.000+";
     } else {
         priceValue.textContent = formatPrice(price);
     }
-}
-
-function getPriceTag(price) {
-    if (price >= 1500000 && price <= 2000000) return "1tr5 - 2tr";
-    if (price > 2000000 && price <= 3000000) return "2tr - 3tr";
-    return "3tr+";
 }
 
 function displayRooms(rooms) {
@@ -94,7 +110,7 @@ function displayRooms(rooms) {
         return;
     }
 
-    rooms.forEach(room => {
+    rooms.forEach((room) => {
         container.innerHTML += `
             <div class="room-card">
                 <img src="../pictures/room.jpg" alt="Phòng trọ">
@@ -112,30 +128,35 @@ function displayRooms(rooms) {
 
 function renderPagination() {
     const pagination = document.getElementById("pagination");
+    const totalPages = Math.ceil(filteredRooms.length / roomsPerPage);
+
     pagination.innerHTML = "";
 
-    const totalPages = Math.ceil(filteredRooms.length / roomsPerPage);
-    if (totalPages <= 1) return;
+    if (totalPages <= 1) {
+        return;
+    }
 
     if (currentPage > 1) {
         const prevBtn = document.createElement("button");
         prevBtn.textContent = "Trước";
         prevBtn.className = "page-text-btn";
-        prevBtn.onclick = function () {
+        prevBtn.type = "button";
+        prevBtn.addEventListener("click", function () {
             currentPage--;
             renderPage();
-        };
+        });
         pagination.appendChild(prevBtn);
     }
 
     for (let i = 1; i <= totalPages; i++) {
         const pageBtn = document.createElement("button");
         pageBtn.textContent = i;
+        pageBtn.type = "button";
         pageBtn.className = i === currentPage ? "page-number active-page" : "page-number";
-        pageBtn.onclick = function () {
+        pageBtn.addEventListener("click", function () {
             currentPage = i;
             renderPage();
-        };
+        });
         pagination.appendChild(pageBtn);
     }
 
@@ -143,20 +164,33 @@ function renderPagination() {
         const nextBtn = document.createElement("button");
         nextBtn.textContent = "Tiếp";
         nextBtn.className = "page-text-btn";
-        nextBtn.onclick = function () {
+        nextBtn.type = "button";
+        nextBtn.addEventListener("click", function () {
             currentPage++;
             renderPage();
-        };
+        });
         pagination.appendChild(nextBtn);
     }
 }
 
 function renderPage() {
-    const start = (currentPage - 1) * roomsPerPage;
-    const end = start + roomsPerPage;
-    const pageRooms = filteredRooms.slice(start, end);
+    const totalPages = Math.ceil(filteredRooms.length / roomsPerPage);
 
-    displayRooms(pageRooms);
+    if (totalPages === 0) {
+        displayRooms([]);
+        document.getElementById("pagination").innerHTML = "";
+        return;
+    }
+
+    if (currentPage > totalPages) {
+        currentPage = totalPages;
+    }
+
+    const startIndex = (currentPage - 1) * roomsPerPage;
+    const endIndex = startIndex + roomsPerPage;
+    const currentRooms = filteredRooms.slice(startIndex, endIndex);
+
+    displayRooms(currentRooms);
     renderPagination();
 }
 
@@ -164,7 +198,7 @@ function searchRoom() {
     const selectedArea = document.getElementById("areaInput").value;
     const selectedPrice = parseInt(document.getElementById("priceInput").value, 10);
 
-    filteredRooms = roomsData.filter(room => {
+    filteredRooms = roomsData.filter(function (room) {
         const matchArea = selectedArea === "" || room.area === selectedArea;
         const matchPrice = room.price <= selectedPrice;
         return matchArea && matchPrice;
@@ -174,6 +208,18 @@ function searchRoom() {
     renderPage();
 }
 
-updatePrice();
-filteredRooms = [...roomsData];
-renderPage();
+document.addEventListener("DOMContentLoaded", function () {
+    const priceInput = document.getElementById("priceInput");
+    const searchBtn = document.getElementById("searchBtn");
+    const areaInput = document.getElementById("areaInput");
+
+    priceInput.addEventListener("input", updatePrice);
+    searchBtn.addEventListener("click", searchRoom);
+
+    // Muốn đổi khu vực là tự lọc luôn
+    areaInput.addEventListener("change", searchRoom);
+
+    updatePrice();
+    filteredRooms = [...roomsData];
+    renderPage();
+});
