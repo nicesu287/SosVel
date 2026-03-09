@@ -310,7 +310,7 @@ function openChatBox() {
         chatData[currentRoom.id] = [
             {
                 sender: "owner",
-                text: "Tôi có thể trao đổi gì thêm với bạn?"
+                text: "Chủ trọ sẽ liên hệ lại với bạn sớm nhất có thể."
             }
         ];
     }
@@ -351,24 +351,7 @@ function sendMessage() {
 
     input.value = "";
     renderChatMessages();
-
-    setTimeout(() => {
-        const replies = [
-            "Dạ bạn có thể hỏi thêm về giá hoặc hợp đồng nhé.",
-            "Phòng này hiện vẫn còn trống nhé bạn.",
-            "Bạn muốn mình gửi thêm thông tin điện nước không?",
-            "Nếu cần, mình có thể hẹn bạn qua xem phòng."
-        ];
-
-        chatData[currentRoom.id].push({
-            sender: "owner",
-            text: randomItem(replies)
-        });
-
-        renderChatMessages();
-    }, 700);
 }
-
 function openContractModal() {
     if (!currentRoom) return;
 
