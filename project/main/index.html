@@ -15,19 +15,15 @@
 <body>
 
 <header>
-
 <h1>SosVel</h1>
 <p>Nền tảng tìm trọ dành cho sinh viên</p>
-
 </header>
 
 <nav>
-
 <a href="#">Trang chủ</a>
 <a href="#">Tìm phòng</a>
 <a href="#">Đăng phòng</a>
 <a href="#">Liên hệ</a>
-
 </nav>
 
 <div class="container">
@@ -37,7 +33,27 @@
 <h2>Tìm phòng trọ</h2>
 
 <input id="areaInput" type="text" placeholder="Nhập khu vực">
-<input id="priceInput" type="number" placeholder="Giá tối đa">
+
+<br><br>
+
+<label>
+Giá tối đa:
+<span id="priceValue">2,000,000</span> VNĐ
+</label>
+
+<br>
+
+<input 
+type="range"
+id="priceInput"
+min="1000000"
+max="3000000"
+step="100000"
+value="2000000"
+oninput="updatePrice()"
+>
+
+<br><br>
 
 <button onclick="searchRoom()">Tìm kiếm</button>
 
@@ -48,9 +64,7 @@
 </div>
 
 <footer>
-
 <p>© 2026 SosVel</p>
-
 </footer>
 
 <script src="script.js"></script>
