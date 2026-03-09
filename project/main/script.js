@@ -10,9 +10,16 @@ const streets = [
     "Hoàng Diệu 2"
 ];
 
+const folderMap = {
+    low: "tu1den2trieu",
+    mid: "tu2den3trieu",
+    high: "tren3trieu"
+};
+
 const roomsPerPage = 12;
 let currentPage = 1;
 let filteredRooms = [];
+let currentRoom = null;
 
 function randomItem(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
@@ -22,67 +29,103 @@ function formatPrice(price) {
     return price.toLocaleString("vi-VN");
 }
 
-function createRoom(title, area, price, address) {
+function getPriceTag(price) {
+    if (price >= 1500000 && price <= 2000000) return "1tr5 - 2tr";
+    if (price > 2000000 && price <= 3000000) return "2tr - 3tr";
+    return "3tr+";
+}
+
+function getRoomFolder(price) {
+    if (price >= 1500000 && price <= 2000000) return folderMap.low;
+    if (price > 2000000 && price <= 3000000) return folderMap.mid;
+    return folderMap.high;
+}
+
+function getCoverImage(folder, coverIndex) {
+    return `../pictures/${folder}/${coverIndex}.jpg`;
+}
+
+function getGalleryImages(folder) {
+    const images = [];
+    for (let i = 12; i <= 48; i++) {
+        images.push(`../pictures/${folder}/${i}.jpg`);
+    }
+    return images;
+}
+
+function createRoom(id, title, area, price, address, size, desc, coverIndex) {
+    const folder = getRoomFolder(price);
+
     return {
+        id,
         title,
         area,
         price,
-        address
+        address,
+        size,
+        desc,
+        folder,
+        coverImage: getCoverImage(folder, coverIndex),
+        galleryImages: getGalleryImages(folder)
     };
 }
 
 const roomsData = [];
+let roomId = 1;
 
-// Tạo 10 trang, mỗi trang 12 phòng:
-// 4 phòng giá 1tr5-2tr
-// 4 phòng giá 2tr-3tr
-// 4 phòng giá 3tr+
-for (let page = 1; page <= 10; page++) {
-    for (let i = 1; i <= 4; i++) {
-        const area = randomItem(areas);
-        roomsData.push(
-            createRoom(
-                `Phòng sinh viên ${page}-A${i}`,
-                area,
-                1500000 + (i - 1) * 100000,
-                `${10 + i}/${page} ${randomItem(streets)}, ${area}`
-            )
-        );
-    }
-
-    for (let i = 1; i <= 4; i++) {
-        const area = randomItem(areas);
-        roomsData.push(
-            createRoom(
-                `Phòng sinh viên ${page}-B${i}`,
-                area,
-                2200000 + (i - 1) * 200000,
-                `${20 + i}/${page} ${randomItem(streets)}, ${area}`
-            )
-        );
-    }
-
-    for (let i = 1; i <= 4; i++) {
-        const area = randomItem(areas);
-        roomsData.push(
-            createRoom(
-                `Phòng sinh viên ${page}-C${i}`,
-                area,
-                3200000 + (i - 1) * 500000,
-                `${30 + i}/${page} ${randomItem(streets)}, ${area}`
-            )
-        );
-    }
+// Tạo 120 phòng:
+// 40 phòng 1tr5-2tr
+// 40 phòng 2tr-3tr
+// 40 phòng 3tr+
+for (let i = 1; i <= 40; i++) {
+    const area = randomItem(areas);
+    const coverIndex = ((i - 1) % 11) + 1;
+    roomsData.push(
+        createRoom(
+            roomId++,
+            `Phòng sinh viên giá tốt ${i}`,
+            area,
+            1500000 + ((i - 1) % 6) * 100000,
+            `${10 + i}, ${randomItem(streets)}, ${area}`,
+            `${16 + (i % 6)}m²`,
+            "Phòng sạch sẽ, phù hợp sinh viên, gần trường và khu ăn uống.",
+            coverIndex
+        )
+    );
 }
 
-function getPriceTag(price) {
-    if (price >= 1500000 && price <= 2000000) {
-        return "1tr5 - 2tr";
-    }
-    if (price > 2000000 && price <= 3000000) {
-        return "2tr - 3tr";
-    }
-    return "3tr+";
+for (let i = 1; i <= 40; i++) {
+    const area = randomItem(areas);
+    const coverIndex = ((i - 1) % 11) + 1;
+    roomsData.push(
+        createRoom(
+            roomId++,
+            `Phòng sinh viên tiện nghi ${i}`,
+            area,
+            2200000 + ((i - 1) % 5) * 200000,
+            `${50 + i}, ${randomItem(streets)}, ${area}`,
+            `${18 + (i % 7)}m²`,
+            "Phòng tiện nghi, có gác hoặc nội thất cơ bản, khu vực an ninh.",
+            coverIndex
+        )
+    );
+}
+
+for (let i = 1; i <= 40; i++) {
+    const area = randomItem(areas);
+    const coverIndex = ((i - 1) % 11) + 1;
+    roomsData.push(
+        createRoom(
+            roomId++,
+            `Phòng cao cấp ${i}`,
+            area,
+            3200000 + ((i - 1) % 6) * 400000,
+            `${90 + i}, ${randomItem(streets)}, ${area}`,
+            `${22 + (i % 8)}m²`,
+            "Phòng rộng rãi, phù hợp ở lâu dài, gần trung tâm và giao thông thuận tiện.",
+            coverIndex
+        )
+    );
 }
 
 function updatePrice() {
@@ -112,8 +155,8 @@ function displayRooms(rooms) {
 
     rooms.forEach((room) => {
         container.innerHTML += `
-            <div class="room-card">
-                <img src="../pictures/room.jpg" alt="Phòng trọ">
+            <div class="room-card" onclick="openRoomDetail(${room.id})">
+                <img src="${room.coverImage}" alt="${room.title}">
                 <div class="room-info">
                     <h3>${room.title}</h3>
                     <p>💰 Giá: ${formatPrice(room.price)} VNĐ</p>
@@ -148,9 +191,7 @@ function renderPagination() {
 
     pagination.innerHTML = "";
 
-    if (totalPages <= 1) {
-        return;
-    }
+    if (totalPages <= 1) return;
 
     if (currentPage > 1) {
         pagination.appendChild(
@@ -238,14 +279,69 @@ function searchRoom() {
     renderPage();
 }
 
+function openRoomDetail(roomId) {
+    const room = roomsData.find(item => item.id === roomId);
+    if (!room) return;
+
+    currentRoom = room;
+
+    document.getElementById("modalTitle").textContent = room.title;
+    document.getElementById("modalPrice").textContent = `💰 Giá: ${formatPrice(room.price)} VNĐ`;
+    document.getElementById("modalArea").textContent = `📌 Khu vực: ${room.area}`;
+    document.getElementById("modalAddress").textContent = `📍 Địa chỉ: ${room.address}`;
+    document.getElementById("modalSize").textContent = `📐 Diện tích: ${room.size}`;
+    document.getElementById("modalDesc").textContent = `📝 Mô tả: ${room.desc}`;
+
+    const mainPreview = document.getElementById("mainPreview");
+    const thumbGrid = document.getElementById("thumbGrid");
+
+    mainPreview.src = room.galleryImages[0];
+    thumbGrid.innerHTML = "";
+
+    room.galleryImages.forEach((imgSrc) => {
+        thumbGrid.innerHTML += `
+            <img src="${imgSrc}" class="thumb-item" onclick="changePreview('${imgSrc}')">
+        `;
+    });
+
+    document.getElementById("roomModal").classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+}
+
+function changePreview(imgSrc) {
+    document.getElementById("mainPreview").src = imgSrc;
+}
+
+function closeRoomDetail() {
+    document.getElementById("roomModal").classList.add("hidden");
+    document.body.style.overflow = "auto";
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     const priceInput = document.getElementById("priceInput");
     const searchBtn = document.getElementById("searchBtn");
     const areaInput = document.getElementById("areaInput");
+    const modalClose = document.getElementById("modalClose");
+    const modalOverlay = document.getElementById("modalOverlay");
+    const contactBtn = document.getElementById("contactBtn");
+    const contractBtn = document.getElementById("contractBtn");
 
     priceInput.addEventListener("input", updatePrice);
     searchBtn.addEventListener("click", searchRoom);
     areaInput.addEventListener("change", searchRoom);
+
+    modalClose.addEventListener("click", closeRoomDetail);
+    modalOverlay.addEventListener("click", closeRoomDetail);
+
+    contactBtn.addEventListener("click", function () {
+        if (!currentRoom) return;
+        alert(`Liên hệ phòng: ${currentRoom.title}\nSố điện thoại: 09xx xxx xxx`);
+    });
+
+    contractBtn.addEventListener("click", function () {
+        if (!currentRoom) return;
+        alert(`Chức năng kí hợp đồng online cho phòng: ${currentRoom.title}\nSẽ làm tiếp ở bước sau.`);
+    });
 
     updatePrice();
     filteredRooms = [...roomsData];
