@@ -24,7 +24,7 @@
         <div class="search-box">
             <h2>Tìm phòng trọ</h2>
 
-            <div class="filter-group">
+            <div class="filter-bar">
                 <div class="filter-item">
                     <label for="areaInput">Khu vực</label>
                     <select id="areaInput">
@@ -38,7 +38,7 @@
                     </select>
                 </div>
 
-                <div class="filter-item price-item">
+                <div class="filter-item price-filter">
                     <label for="priceInput">
                         Giá tối đa:
                         <span id="priceValue">1,000,000</span> VNĐ
@@ -59,9 +59,11 @@
                         <span>5tr+</span>
                     </div>
                 </div>
-            </div>
 
-            <button onclick="searchRoom()">Tìm kiếm</button>
+                <div class="filter-action">
+                    <button onclick="searchRoom()">Tìm kiếm</button>
+                </div>
+            </div>
         </div>
 
         <div class="rooms" id="roomContainer"></div>
