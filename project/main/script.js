@@ -58,7 +58,6 @@ function getCoverImage(folder, index) {
     return `${BASE_PATH}/${folder}/${index}.jpg`;
 }
 
-// Chỉ lấy 3 ảnh chi tiết từ 12 -> 48
 function getGalleryImages(folder, id) {
     const rangeStart = 12;
     const rangeSize = 37;
@@ -98,7 +97,6 @@ function createRoom(id, title, area, price, address, size, desc, coverIndex) {
 const roomsData = [];
 let roomId = 1;
 
-// 120 phòng
 for (let i = 1; i <= 120; i++) {
     const area = randomItem(areas);
 
@@ -121,6 +119,32 @@ for (let i = 1; i <= 120; i++) {
             coverIndex
         )
     );
+}
+
+function updateAuthNav() {
+    const authNav = document.getElementById("authNav");
+    if (!authNav || typeof getCurrentUser !== "function") return;
+
+    const user = getCurrentUser();
+
+    if (!user) {
+        authNav.innerHTML = `
+            <a href="login.html">Đăng nhập</a>
+            <a href="register.html">Đăng ký</a>
+        `;
+        return;
+    }
+
+    authNav.innerHTML = `
+        <span class="user-greeting">Xin chào, ${user.name}</span>
+        <a href="#" id="logoutBtn">Đăng xuất</a>
+    `;
+
+    const logoutBtn = document.getElementById("logoutBtn");
+    logoutBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        logout();
+    });
 }
 
 function updatePrice() {
@@ -306,14 +330,12 @@ function openChatBox() {
     chatRoomTitle.textContent = currentRoom.title;
     chatOwnerName.textContent = `${currentRoom.ownerName} • Chủ trọ`;
 
-    if (!chatData[currentRoom.id]) {
-        chatData[currentRoom.id] = [
-            {
-                sender: "owner",
-                text: "Chủ trọ sẽ liên hệ lại với bạn sớm nhất có thể."
-            }
-        ];
-    }
+    chatData[currentRoom.id] = [
+        {
+            sender: "owner",
+            text: "Chủ trọ sẽ liên hệ lại với bạn sớm nhất có thể."
+        }
+    ];
 
     renderChatMessages();
     chatBox.classList.remove("hidden");
@@ -352,14 +374,23 @@ function sendMessage() {
     input.value = "";
     renderChatMessages();
 }
+
 function openContractModal() {
     if (!currentRoom) return;
 
+    const user = getCurrentUser();
+    if (!user) return;
+
     document.getElementById("contractRoomName").textContent = `Phòng: ${currentRoom.title}`;
     document.getElementById("contractRoomPrice").textContent = `Giá phòng: ${formatPrice(currentRoom.price)} VNĐ`;
-    document.getElementById("depositAmount").value = `${formatPrice(Math.round(currentRoom.price / 2))} VNĐ`;
-    document.getElementById("contractMessage").textContent = "";
 
+    document.getElementById("tenantName").value = user.name;
+    document.getElementById("tenantDob").value = user.dob;
+    document.getElementById("tenantCccd").value = user.cccd;
+    document.getElementById("tenantPhone").value = user.phone;
+    document.getElementById("depositAmount").value = `${formatPrice(Math.round(currentRoom.price / 2))} VNĐ`;
+
+    document.getElementById("contractMessage").textContent = "";
     document.getElementById("contractModal").classList.remove("hidden");
 }
 
@@ -370,6 +401,7 @@ function closeContractModal() {
 document.addEventListener("DOMContentLoaded", function () {
     filteredRooms = [...roomsData];
 
+    updateAuthNav();
     updatePrice();
     renderRooms();
     renderPagination();
@@ -381,11 +413,14 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("modalOverlay").addEventListener("click", closeRoomDetail);
 
     document.getElementById("contactBtn").addEventListener("click", function () {
+        if (!requireLogin()) return;
         closeRoomDetail();
         openChatBox();
     });
 
     document.getElementById("contractBtn").addEventListener("click", function () {
+        if (!requireLogin()) return;
+        closeRoomDetail();
         openContractModal();
     });
 
