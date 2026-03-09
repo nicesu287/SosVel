@@ -34,9 +34,9 @@ function createRoom(title, area, price, address) {
 const roomsData = [];
 
 // Tạo 10 trang, mỗi trang 12 phòng:
-// 4 phòng 1tr5-2tr
-// 4 phòng 2tr-3tr
-// 4 phòng 3tr+
+// 4 phòng giá 1tr5-2tr
+// 4 phòng giá 2tr-3tr
+// 4 phòng giá 3tr+
 for (let page = 1; page <= 10; page++) {
     for (let i = 1; i <= 4; i++) {
         const area = randomItem(areas);
@@ -126,6 +126,22 @@ function displayRooms(rooms) {
     });
 }
 
+function createPageButton(text, className, onClick) {
+    const btn = document.createElement("button");
+    btn.textContent = text;
+    btn.className = className;
+    btn.type = "button";
+    btn.addEventListener("click", onClick);
+    return btn;
+}
+
+function createDots() {
+    const dots = document.createElement("span");
+    dots.textContent = "...";
+    dots.className = "page-dots";
+    return dots;
+}
+
 function renderPagination() {
     const pagination = document.getElementById("pagination");
     const totalPages = Math.ceil(filteredRooms.length / roomsPerPage);
@@ -137,39 +153,53 @@ function renderPagination() {
     }
 
     if (currentPage > 1) {
-        const prevBtn = document.createElement("button");
-        prevBtn.textContent = "Trước";
-        prevBtn.className = "page-text-btn";
-        prevBtn.type = "button";
-        prevBtn.addEventListener("click", function () {
-            currentPage--;
-            renderPage();
-        });
-        pagination.appendChild(prevBtn);
+        pagination.appendChild(
+            createPageButton("Trước", "page-text-btn", function () {
+                currentPage--;
+                renderPage();
+            })
+        );
     }
 
-    for (let i = 1; i <= totalPages; i++) {
-        const pageBtn = document.createElement("button");
-        pageBtn.textContent = i;
-        pageBtn.type = "button";
-        pageBtn.className = i === currentPage ? "page-number active-page" : "page-number";
-        pageBtn.addEventListener("click", function () {
-            currentPage = i;
-            renderPage();
-        });
-        pagination.appendChild(pageBtn);
+    const pagesToShow = [];
+
+    if (totalPages <= 7) {
+        for (let i = 1; i <= totalPages; i++) {
+            pagesToShow.push(i);
+        }
+    } else {
+        if (currentPage <= 3) {
+            pagesToShow.push(1, 2, 3, 4, "dots", totalPages);
+        } else if (currentPage >= totalPages - 2) {
+            pagesToShow.push(1, "dots", totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+        } else {
+            pagesToShow.push(1, "dots", currentPage - 1, currentPage, currentPage + 1, "dots", totalPages);
+        }
     }
+
+    pagesToShow.forEach((item) => {
+        if (item === "dots") {
+            pagination.appendChild(createDots());
+        } else {
+            const pageBtn = document.createElement("button");
+            pageBtn.textContent = item;
+            pageBtn.type = "button";
+            pageBtn.className = item === currentPage ? "page-number active-page" : "page-number";
+            pageBtn.addEventListener("click", function () {
+                currentPage = item;
+                renderPage();
+            });
+            pagination.appendChild(pageBtn);
+        }
+    });
 
     if (currentPage < totalPages) {
-        const nextBtn = document.createElement("button");
-        nextBtn.textContent = "Tiếp";
-        nextBtn.className = "page-text-btn";
-        nextBtn.type = "button";
-        nextBtn.addEventListener("click", function () {
-            currentPage++;
-            renderPage();
-        });
-        pagination.appendChild(nextBtn);
+        pagination.appendChild(
+            createPageButton("Tiếp", "page-text-btn", function () {
+                currentPage++;
+                renderPage();
+            })
+        );
     }
 }
 
@@ -215,8 +245,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     priceInput.addEventListener("input", updatePrice);
     searchBtn.addEventListener("click", searchRoom);
-
-    // Muốn đổi khu vực là tự lọc luôn
     areaInput.addEventListener("change", searchRoom);
 
     updatePrice();
