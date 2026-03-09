@@ -6,7 +6,6 @@
     <title>SosVel</title>
     <link rel="stylesheet" href="../stylist/style.css">
 </head>
-
 <body>
 
 <header>
@@ -29,12 +28,10 @@
 </nav>
 
 <div class="container">
-
     <div class="search-box">
         <h2>Tìm phòng trọ</h2>
 
         <div class="filter-bar">
-
             <div class="filter-item">
                 <label for="areaInput">Khu vực</label>
                 <select id="areaInput">
@@ -71,15 +68,10 @@
             </div>
 
             <div class="filter-action">
-                <button
-                    type="button"
-                    id="searchBtn"
-                    class="search-btn"
-                >
+                <button type="button" id="searchBtn" class="search-btn">
                     Tìm kiếm
                 </button>
             </div>
-
         </div>
     </div>
 
@@ -95,7 +87,6 @@
         <button id="modalClose" class="modal-close" type="button">×</button>
 
         <div class="modal-grid">
-
             <div class="modal-left">
                 <img id="mainPreview" class="main-preview" src="" alt="Ảnh phòng">
                 <div id="thumbGrid" class="thumb-grid"></div>
@@ -103,7 +94,6 @@
 
             <div class="modal-right">
                 <h2 id="modalTitle">Chi tiết phòng</h2>
-
                 <p id="modalPrice"></p>
                 <p id="modalArea"></p>
                 <p id="modalAddress"></p>
@@ -131,37 +121,109 @@
     </div>
 </div>
 
-<!-- MODAL CỌC ONLINE -->
+<!-- MODAL HỢP ĐỒNG -->
 <div class="modal hidden" id="contractModal">
     <div class="modal-overlay" id="contractOverlay"></div>
 
-    <div class="contract-content">
+    <div class="contract-content contract-doc-wrap">
         <button id="contractClose" class="modal-close" type="button">×</button>
 
-        <h2>Kí hợp đồng cọc online</h2>
-        <p id="contractRoomName"></p>
-        <p id="contractRoomPrice"></p>
+        <div id="contractDocument" class="contract-document">
+            <div class="contract-header">
+                <p>Cộng hòa xã hội chủ nghĩa Việt Nam</p>
+                <p>Độc lập – Tự do – Hạnh phúc</p>
+                <p>--------------------</p>
+                <h2>HỢP ĐỒNG ĐẶT CỌC CHO THUÊ NHÀ</h2>
+                <p>(Số: 01/HĐĐC)</p>
+            </div>
 
-        <form id="contractForm" class="contract-form">
-            <label for="tenantName">Họ và tên</label>
-            <input id="tenantName" type="text" readonly>
+            <p>
+                Hôm nay, tại <strong>TP.HCM</strong>, vào ngày
+                <span id="contractDate"></span>
+            </p>
 
-            <label for="tenantDob">Ngày tháng năm sinh</label>
-            <input id="tenantDob" type="text" readonly>
+            <h3>BÊN ĐẶT CỌC (BÊN A):</h3>
+            <p>- Ông/Bà: <span id="tenantName"></span></p>
+            <p>- Ngày sinh: <span id="tenantDob"></span></p>
+            <p>- CMND/CCCD số: <span id="tenantCccd"></span></p>
+            <p>- Điện thoại: <span id="tenantPhone"></span></p>
 
-            <label for="tenantCccd">CCCD</label>
-            <input id="tenantCccd" type="text" readonly>
+            <h3>BÊN NHẬN ĐẶT CỌC (BÊN B):</h3>
+            <p>- Ông/Bà: <span id="ownerName"></span></p>
+            <p>- Điện thoại: <span id="ownerPhone"></span></p>
+            <p>- Phòng cho thuê: <span id="contractRoomName"></span></p>
+            <p>- Địa chỉ phòng: <span id="contractRoomAddress"></span></p>
 
-            <label for="tenantPhone">Số điện thoại</label>
-            <input id="tenantPhone" type="text" readonly>
+            <h3>Điều 01. Tài sản đặt cọc</h3>
+            <p>
+                Bên A đồng ý đặt cọc cho Bên B số tiền:
+                <strong id="depositAmount"></strong>
+            </p>
 
-            <label for="depositAmount">Số tiền cọc</label>
-            <input id="depositAmount" type="text" readonly>
+            <h3>Điều 02. Thời hạn đặt cọc</h3>
+            <p>
+                Thời hạn đặt cọc là <strong>07 ngày</strong> kể từ ngày ký hợp đồng này.
+            </p>
 
-            <button type="submit" class="contract-submit-btn">
-                Xác nhận cọc online
+            <h3>Điều 03. Mục đích đặt cọc</h3>
+            <p>
+                Việc đặt cọc nhằm bảo đảm cho việc giao kết và thực hiện hợp đồng thuê phòng
+                giữa Bên A và Bên B đối với phòng nêu trên.
+            </p>
+
+            <h3>Điều 04. Quyền và nghĩa vụ của Bên A</h3>
+            <p>
+                Bên A có nghĩa vụ giao đủ số tiền đặt cọc theo thỏa thuận và thực hiện đúng cam kết thuê phòng.
+            </p>
+
+            <h3>Điều 05. Quyền và nghĩa vụ của Bên B</h3>
+            <p>
+                Bên B có nghĩa vụ giữ phòng theo thỏa thuận và hoàn trả/khấu trừ tiền cọc theo hợp đồng thuê nhà.
+            </p>
+
+            <h3>Điều 06. Phương thức giải quyết tranh chấp</h3>
+            <p>
+                Hai bên ưu tiên thương lượng, nếu không giải quyết được thì có quyền yêu cầu cơ quan có thẩm quyền giải quyết.
+            </p>
+
+            <h3>Điều 07. Cam đoan của các bên</h3>
+            <p>
+                Hai bên cam kết các thông tin cung cấp là đúng sự thật, việc giao kết hoàn toàn tự nguyện.
+            </p>
+
+            <h3>Điều 08. Điều khoản chung</h3>
+            <p>
+                Hợp đồng này có hiệu lực kể từ ngày ký xác nhận.
+            </p>
+
+            <div class="signature-section">
+                <div class="signature-box">
+                    <p><strong>BÊN A</strong></p>
+                    <p>(Ký tên điện tử)</p>
+                    <canvas id="signaturePad" width="320" height="160"></canvas>
+                    <div class="signature-actions">
+                        <button type="button" id="clearSignature" class="secondary-btn">Xóa chữ ký</button>
+                    </div>
+                </div>
+
+                <div class="signature-box">
+                    <p><strong>BÊN B</strong></p>
+                    <p>(Chủ trọ xác nhận sau)</p>
+                    <div class="owner-sign-placeholder">
+                        Xác nhận từ chủ trọ
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="contract-toolbar">
+            <button type="button" id="downloadPdfBtn" class="secondary-btn">
+                Xuất PDF
             </button>
-        </form>
+            <button type="button" id="confirmContract" class="contract-submit-btn">
+                Xác nhận ký hợp đồng
+            </button>
+        </div>
 
         <p id="contractMessage" class="contract-message"></p>
     </div>
@@ -180,11 +242,7 @@
     <div id="chatMessages" class="chat-messages"></div>
 
     <div class="chat-input">
-        <input
-            id="chatInput"
-            type="text"
-            placeholder="Nhập tin nhắn..."
-        >
+        <input id="chatInput" type="text" placeholder="Nhập tin nhắn...">
         <button id="sendChat" type="button">Gửi</button>
     </div>
 </div>
