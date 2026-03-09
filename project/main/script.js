@@ -47,12 +47,20 @@ function getCoverImage(folder, coverIndex) {
     return `${BASE_PATH}/${folder}/${coverIndex}.jpg`;
 }
 
-function getGalleryImages(folder) {
-    const images = [];
-    for (let i = 12; i <= 48; i++) {
-        images.push(`${BASE_PATH}/${folder}/${i}.jpg`);
-    }
-    return images;
+// chỉ lấy 3 ảnh từ 12 -> 48, cố định theo id phòng
+function getGalleryImages(folder, roomId) {
+    const range = 37; // từ 12 đến 48 có 37 ảnh
+    const offset = (roomId * 3) % range;
+
+    const img1 = 12 + (offset % range);
+    const img2 = 12 + ((offset + 1) % range);
+    const img3 = 12 + ((offset + 2) % range);
+
+    return [
+        `${BASE_PATH}/${folder}/${img1}.jpg`,
+        `${BASE_PATH}/${folder}/${img2}.jpg`,
+        `${BASE_PATH}/${folder}/${img3}.jpg`
+    ];
 }
 
 function createRoom(id, title, area, price, address, size, desc, coverIndex) {
@@ -68,7 +76,7 @@ function createRoom(id, title, area, price, address, size, desc, coverIndex) {
         desc,
         folder,
         coverImage: getCoverImage(folder, coverIndex),
-        galleryImages: getGalleryImages(folder)
+        galleryImages: getGalleryImages(folder, id)
     };
 }
 
@@ -167,6 +175,11 @@ function displayRooms(rooms) {
                 <span class="price-badge">${getPriceTag(room.price)}</span>
             </div>
         `;
+
+        const img = card.querySelector("img");
+        img.onerror = function () {
+            this.src = `${BASE_PATH}/${room.folder}/2.jpg`;
+        };
 
         container.appendChild(card);
     });
@@ -296,6 +309,10 @@ function openRoomDetail(roomId) {
     const thumbGrid = document.getElementById("thumbGrid");
 
     mainPreview.src = room.galleryImages[0];
+    mainPreview.onerror = function () {
+        this.src = `${BASE_PATH}/${room.folder}/12.jpg`;
+    };
+
     thumbGrid.innerHTML = "";
 
     room.galleryImages.forEach((imgSrc) => {
@@ -303,6 +320,9 @@ function openRoomDetail(roomId) {
         thumb.src = imgSrc;
         thumb.className = "thumb-item";
         thumb.alt = room.title;
+        thumb.onerror = function () {
+            this.src = `${BASE_PATH}/${room.folder}/12.jpg`;
+        };
         thumb.addEventListener("click", function () {
             mainPreview.src = imgSrc;
         });
