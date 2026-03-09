@@ -363,9 +363,18 @@ document.addEventListener("DOMContentLoaded", function () {
     modalOverlay.addEventListener("click", closeRoomDetail);
 
     contactBtn.addEventListener("click", function () {
-        if (!currentRoom) return;
-        alert(`Liên hệ phòng: ${currentRoom.title}\nSố điện thoại: 09xx xxx xxx`);
-    });
+
+    if (!currentRoom) return;
+
+    const phone = "0901234567";
+
+    alert(
+        `Số điện thoại chủ nhà: ${phone}`
+    );
+
+    openChatBox();
+
+});
 
     contractBtn.addEventListener("click", function () {
         if (!currentRoom) return;
