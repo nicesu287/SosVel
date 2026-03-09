@@ -1,63 +1,188 @@
-box-shadow:0 5px 20px rgba(0,0,0,.2);
-    overflow:hidden;
-    z-index:2000;
-}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SosVel</title>
+    <link rel="stylesheet" href="../stylist/style.css">
+</head>
 
-.chat-header{
-    background:#2c7be5;
-    color:white;
-    padding:10px;
-    font-weight:bold;
-    display:flex;
-    justify-content:space-between;
-}
+<body>
 
-.chat-messages{
-    height:200px;
-    overflow-y:auto;
-    padding:10px;
-}
+<header>
+    <h1>SosVel</h1>
+    <p>Nền tảng tìm trọ dành cho sinh viên</p>
+</header>
 
-.chat-input{
-    display:flex;
-}
+<nav>
+    <a href="#">Trang chủ</a>
+    <a href="#">Tìm phòng</a>
+    <a href="#">Đăng phòng</a>
+    <a href="#">Liên hệ</a>
+</nav>
 
-.chat-input input{
-    flex:1;
-    border:none;
-    padding:8px;
-}
+<div class="container">
 
-.chat-input button{
-    background:#2c7be5;
-    color:white;
-    border:none;
-    padding:8px 12px;
-}
+    <div class="search-box">
+        <h2>Tìm phòng trọ</h2>
 
-/* ===== FOOTER ===== */
+        <div class="filter-bar">
 
-footer{
-    margin-top:40px;
-    background:white;
-    text-align:center;
-    padding:20px;
-}
+            <div class="filter-item">
+                <label for="areaInput">Khu vực</label>
+                <select id="areaInput">
+                    <option value="">Tất cả khu vực</option>
+                    <option value="Đông Hòa">Đông Hòa</option>
+                    <option value="Dĩ An">Dĩ An</option>
+                    <option value="Thủ Đức">Thủ Đức</option>
+                    <option value="Suối Tiên">Suối Tiên</option>
+                    <option value="Linh Trung">Linh Trung</option>
+                    <option value="Bình Thọ">Bình Thọ</option>
+                </select>
+            </div>
 
-/* ===== MOBILE ===== */
+            <div class="filter-item price-filter">
+                <label for="priceInput">
+                    Giá tối đa:
+                    <span id="priceValue">5.000.000+</span>
+                    VNĐ
+                </label>
 
-@media(max-width:900px){
+                <input
+                    type="range"
+                    id="priceInput"
+                    min="1000000"
+                    max="5000000"
+                    step="100000"
+                    value="5000000"
+                >
 
-.filter-bar{
-grid-template-columns:1fr;
-}
+                <div class="price-note">
+                    <span>1tr</span>
+                    <span>5tr+</span>
+                </div>
+            </div>
 
-.modal-grid{
-grid-template-columns:1fr;
-}
+            <div class="filter-action">
+                <button
+                    type="button"
+                    id="searchBtn"
+                    class="search-btn"
+                >
+                    Tìm kiếm
+                </button>
+            </div>
 
-.main-preview{
-height:220px;
-}
+        </div>
+    </div>
 
-}
+    <div class="rooms" id="roomContainer"></div>
+    <div class="pagination" id="pagination"></div>
+</div>
+
+<!-- ================= MODAL CHI TIẾT PHÒNG ================= -->
+<div class="modal hidden" id="roomModal">
+    <div class="modal-overlay" id="modalOverlay"></div>
+
+    <div class="modal-content">
+        <button id="modalClose" class="modal-close" type="button">×</button>
+
+        <div class="modal-grid">
+
+            <div class="modal-left">
+                <img id="mainPreview" class="main-preview" src="" alt="Ảnh phòng">
+                <div id="thumbGrid" class="thumb-grid"></div>
+            </div>
+
+            <div class="modal-right">
+                <h2 id="modalTitle">Chi tiết phòng</h2>
+
+                <p id="modalPrice"></p>
+                <p id="modalArea"></p>
+                <p id="modalAddress"></p>
+                <p id="modalSize"></p>
+                <p id="modalDesc"></p>
+
+                <div class="feature-list">
+                    <span>✅ Điện nước minh bạch</span>
+                    <span>✅ Gần trường</span>
+                    <span>✅ Khu vực an ninh</span>
+                    <span>✅ Có chỗ để xe</span>
+                </div>
+
+                <div class="modal-actions">
+                    <button id="contactBtn" class="contact-btn" type="button">
+                        Liên hệ
+                    </button>
+
+                    <button id="contractBtn" class="contract-btn" type="button">
+                        Kí hợp đồng cọc online
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ================= MODAL CỌC ONLINE ================= -->
+<div class="modal hidden" id="contractModal">
+    <div class="modal-overlay" id="contractOverlay"></div>
+
+    <div class="contract-content">
+        <button id="contractClose" class="modal-close" type="button">×</button>
+
+        <h2>Kí hợp đồng cọc online</h2>
+        <p id="contractRoomName"></p>
+        <p id="contractRoomPrice"></p>
+
+        <form id="contractForm" class="contract-form">
+            <label for="tenantName">Họ và tên</label>
+            <input id="tenantName" type="text" placeholder="Nhập họ và tên" required>
+
+            <label for="tenantPhone">Số điện thoại</label>
+            <input id="tenantPhone" type="text" placeholder="Nhập số điện thoại" required>
+
+            <label for="tenantCccd">CCCD / CMND</label>
+            <input id="tenantCccd" type="text" placeholder="Nhập CCCD / CMND" required>
+
+            <label for="depositAmount">Số tiền cọc</label>
+            <input id="depositAmount" type="text" readonly>
+
+            <button type="submit" class="contract-submit-btn">
+                Xác nhận cọc online
+            </button>
+        </form>
+
+        <p id="contractMessage" class="contract-message"></p>
+    </div>
+</div>
+
+<!-- ================= CHAT BOX GÓC PHẢI ================= -->
+<div id="chatBox" class="chat-box hidden">
+    <div class="chat-header">
+        <div>
+            <strong id="chatRoomTitle">Chat với chủ trọ</strong>
+            <div class="chat-subtitle" id="chatOwnerName">Chủ trọ đang online</div>
+        </div>
+        <span id="chatClose">✖</span>
+    </div>
+
+    <div id="chatMessages" class="chat-messages"></div>
+
+    <div class="chat-input">
+        <input
+            id="chatInput"
+            type="text"
+            placeholder="Nhập tin nhắn..."
+        >
+        <button id="sendChat" type="button">Gửi</button>
+    </div>
+</div>
+
+<footer>
+    <p>© 2026 SosVel</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
