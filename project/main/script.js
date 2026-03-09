@@ -117,36 +117,38 @@ function renderPagination() {
     const totalPages = Math.ceil(filteredRooms.length / roomsPerPage);
     if (totalPages <= 1) return;
 
-    const prevBtn = document.createElement("button");
-    prevBtn.textContent = "← Trước";
-    prevBtn.className = "page-btn";
-    prevBtn.disabled = currentPage === 1;
-    prevBtn.onclick = function () {
-        currentPage--;
-        renderPage();
-    };
-    pagination.appendChild(prevBtn);
+    if (currentPage > 1) {
+        const prevBtn = document.createElement("button");
+        prevBtn.textContent = "Trước";
+        prevBtn.className = "page-text-btn";
+        prevBtn.onclick = function () {
+            currentPage--;
+            renderPage();
+        };
+        pagination.appendChild(prevBtn);
+    }
 
     for (let i = 1; i <= totalPages; i++) {
-        const btn = document.createElement("button");
-        btn.textContent = i;
-        btn.className = i === currentPage ? "page-btn active-page" : "page-btn";
-        btn.onclick = function () {
+        const pageBtn = document.createElement("button");
+        pageBtn.textContent = i;
+        pageBtn.className = i === currentPage ? "page-number active-page" : "page-number";
+        pageBtn.onclick = function () {
             currentPage = i;
             renderPage();
         };
-        pagination.appendChild(btn);
+        pagination.appendChild(pageBtn);
     }
 
-    const nextBtn = document.createElement("button");
-    nextBtn.textContent = "Sau →";
-    nextBtn.className = "page-btn";
-    nextBtn.disabled = currentPage === totalPages;
-    nextBtn.onclick = function () {
-        currentPage++;
-        renderPage();
-    };
-    pagination.appendChild(nextBtn);
+    if (currentPage < totalPages) {
+        const nextBtn = document.createElement("button");
+        nextBtn.textContent = "Tiếp";
+        nextBtn.className = "page-text-btn";
+        nextBtn.onclick = function () {
+            currentPage++;
+            renderPage();
+        };
+        pagination.appendChild(nextBtn);
+    }
 }
 
 function renderPage() {
