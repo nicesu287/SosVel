@@ -33,6 +33,10 @@ let currentPage = 1;
 let filteredRooms = [];
 let currentRoom = null;
 let chatData = {};
+let signatureCanvas = null;
+let signatureCtx = null;
+let isDrawing = false;
+let hasSigned = false;
 
 function randomItem(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
@@ -375,27 +379,135 @@ function sendMessage() {
     renderChatMessages();
 }
 
-function openContractModal() {
-    if (!currentRoom) return;
+function formatContractDate(date = new Date()) {
+    return date.toLocaleDateString("vi-VN");
+}
 
+function initSignaturePad() {
+    signatureCanvas = document.getElementById("signaturePad");
+    if (!signatureCanvas) return;
+
+    signatureCtx = signatureCanvas.getContext("2d");
+    signatureCtx.lineWidth = 2;
+    signatureCtx.lineCap = "round";
+    signatureCtx.strokeStyle = "#111827";
+
+    function getPos(e) {
+        const rect = signatureCanvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+        return {
+            x: (clientX - rect.left) * (signatureCanvas.width / rect.width),
+            y: (clientY - rect.top) * (signatureCanvas.height / rect.height)
+        };
+    }
+
+    function startDraw(e) {
+        isDrawing = true;
+        const pos = getPos(e);
+        signatureCtx.beginPath();
+        signatureCtx.moveTo(pos.x, pos.y);
+        hasSigned = true;
+        e.preventDefault();
+    }
+
+    function draw(e) {
+        if (!isDrawing) return;
+        const pos = getPos(e);
+        signatureCtx.lineTo(pos.x, pos.y);
+        signatureCtx.stroke();
+        e.preventDefault();
+    }
+
+    function endDraw() {
+        isDrawing = false;
+    }
+
+    signatureCanvas.addEventListener("mousedown", startDraw);
+    signatureCanvas.addEventListener("mousemove", draw);
+    signatureCanvas.addEventListener("mouseup", endDraw);
+    signatureCanvas.addEventListener("mouseleave", endDraw);
+
+    signatureCanvas.addEventListener("touchstart", startDraw, { passive: false });
+    signatureCanvas.addEventListener("touchmove", draw, { passive: false });
+    signatureCanvas.addEventListener("touchend", endDraw);
+
+    document.getElementById("clearSignature").addEventListener("click", function () {
+        signatureCtx.clearRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+        hasSigned = false;
+    });
+}
+
+function fillContractData() {
+    if (!currentRoom) return;
     const user = getCurrentUser();
     if (!user) return;
 
-    document.getElementById("contractRoomName").textContent = `Phòng: ${currentRoom.title}`;
-    document.getElementById("contractRoomPrice").textContent = `Giá phòng: ${formatPrice(currentRoom.price)} VNĐ`;
+    document.getElementById("contractDate").textContent = formatContractDate();
+    document.getElementById("tenantName").textContent = user.name;
+    document.getElementById("tenantDob").textContent = user.dob;
+    document.getElementById("tenantCccd").textContent = user.cccd;
+    document.getElementById("tenantPhone").textContent = user.phone;
 
-    document.getElementById("tenantName").value = user.name;
-    document.getElementById("tenantDob").value = user.dob;
-    document.getElementById("tenantCccd").value = user.cccd;
-    document.getElementById("tenantPhone").value = user.phone;
-    document.getElementById("depositAmount").value = `${formatPrice(Math.round(currentRoom.price / 2))} VNĐ`;
+    document.getElementById("ownerName").textContent = currentRoom.ownerName;
+    document.getElementById("ownerPhone").textContent = currentRoom.ownerPhone;
+    document.getElementById("contractRoomName").textContent = currentRoom.title;
+    document.getElementById("contractRoomAddress").textContent = currentRoom.address;
+    document.getElementById("depositAmount").textContent =
+        `${formatPrice(Math.round(currentRoom.price / 2))} VNĐ`;
+}
 
+function openContractModal() {
+    if (!currentRoom) return;
+    const user = getCurrentUser();
+    if (!user) return;
+
+    fillContractData();
     document.getElementById("contractMessage").textContent = "";
     document.getElementById("contractModal").classList.remove("hidden");
+
+    if (signatureCtx) {
+        signatureCtx.clearRect(0, 0, signatureCanvas.width, signatureCanvas.height);
+        hasSigned = false;
+    }
 }
 
 function closeContractModal() {
     document.getElementById("contractModal").classList.add("hidden");
+}
+
+function downloadContractPdf() {
+    const user = getCurrentUser();
+    if (!user || !currentRoom) return;
+
+    const printWindow = window.open("", "_blank");
+    const contractHtml = document.getElementById("contractDocument").innerHTML;
+
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Hop dong dat coc</title>
+            <style>
+                body { font-family: Arial, sans-serif; padding: 24px; line-height: 1.6; }
+                h2, h3, p { margin: 6px 0; }
+                .contract-header { text-align:center; margin-bottom:20px; }
+                .signature-section { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:28px; }
+                canvas { border:1px dashed #999; }
+                .signature-actions, .contract-toolbar { display:none; }
+                .owner-sign-placeholder{
+                    height:160px; border:1px dashed #999; display:flex;
+                    align-items:center; justify-content:center;
+                }
+            </style>
+        </head>
+        <body>${contractHtml}</body>
+        </html>
+    `);
+
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -405,6 +517,7 @@ document.addEventListener("DOMContentLoaded", function () {
     updatePrice();
     renderRooms();
     renderPagination();
+    initSignaturePad();
 
     document.getElementById("priceInput").addEventListener("input", updatePrice);
     document.getElementById("searchBtn").addEventListener("click", filterRooms);
@@ -427,11 +540,19 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("contractClose").addEventListener("click", closeContractModal);
     document.getElementById("contractOverlay").addEventListener("click", closeContractModal);
 
-    document.getElementById("contractForm").addEventListener("submit", function (e) {
-        e.preventDefault();
+    document.getElementById("downloadPdfBtn").addEventListener("click", downloadContractPdf);
+
+    document.getElementById("confirmContract").addEventListener("click", function () {
+        if (!requireLogin()) return;
+
+        if (!hasSigned) {
+            document.getElementById("contractMessage").textContent =
+                "Bạn cần ký tên điện tử trước khi xác nhận hợp đồng.";
+            return;
+        }
 
         document.getElementById("contractMessage").textContent =
-            "Yêu cầu cọc online đã được gửi thành công. Chủ trọ sẽ liên hệ lại với bạn sớm.";
+            "Hợp đồng cọc online đã được xác nhận thành công. Chủ trọ sẽ liên hệ lại với bạn sớm.";
     });
 
     document.getElementById("chatClose").addEventListener("click", function () {
