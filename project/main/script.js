@@ -373,8 +373,7 @@ function openChatBox() {
     quickQuestions.classList.remove("hidden");
     moreQuestionWrap.classList.add("hidden");
 
-    const buttons = quickQuestions.querySelectorAll(".quick-btn");
-    buttons.forEach(btn => {
+    quickQuestions.querySelectorAll(".quick-btn").forEach(btn => {
         btn.disabled = false;
     });
 
@@ -430,9 +429,7 @@ function handleQuickQuestion(type, buttonEl) {
 
     renderChatMessages();
 
-    const doneAll = state.included && state.available && state.capacity;
-
-    if (doneAll && !state.done) {
+    if (state.included && state.available && state.capacity && !state.done) {
         state.done = true;
         document.getElementById("moreQuestionWrap").classList.remove("hidden");
     }
