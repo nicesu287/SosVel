@@ -195,11 +195,16 @@ function renderRooms() {
         div.innerHTML = `
             <img src="${room.coverImage}" alt="Phòng trọ">
             <div class="room-info">
+                <div class="room-topline">
+                    <span class="room-area-badge">${room.area}</span>
+                    <span class="price-badge">${getPriceTag(room.price)}</span>
+                </div>
+
                 <h3>${room.title}</h3>
-                <p>📍 ${room.area}</p>
-                <p>💰 ${formatPrice(room.price)} VNĐ</p>
+                <p class="room-price-main">${formatPrice(room.price)} VNĐ / tháng</p>
+                <p>📍 ${room.address}</p>
                 <p>📐 ${room.size}</p>
-                <span class="price-badge">${getPriceTag(room.price)}</span>
+
                 <button class="detail-btn" type="button">Xem chi tiết</button>
             </div>
         `;
