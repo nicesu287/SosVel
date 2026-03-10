@@ -188,7 +188,7 @@ header{
 /* MODAL */
 
 .hidden{
-    display:none;
+    display:none !important;
 }
 
 .modal{
@@ -447,7 +447,8 @@ header{
 }
 
 .chat-messages{
-    height:260px;
+    max-height:260px;
+    min-height:160px;
     overflow-y:auto;
     padding:12px;
     background:#f8fafc;
