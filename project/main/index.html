@@ -8,12 +8,30 @@
 </head>
 <body>
 
-<header>
+<header class="hero-header">
+    <div class="hero-badge">Nền tảng thuê trọ thông minh</div>
     <h1>SosVel</h1>
-    <p>Nền tảng tìm trọ dành cho sinh viên</p>
+    <p class="hero-subtitle">Giải pháp hỗ trợ thuê trọ &amp; chung cư thế hệ mới</p>
+    <p class="hero-desc">
+        Tìm kiếm nơi ở phù hợp nhanh chóng, minh bạch và thuận tiện hơn
+        cho sinh viên và người đi làm.
+    </p>
+
+    <div class="hero-actions">
+        <a href="#roomContainer" class="hero-btn hero-btn-primary">Khám phá phòng</a>
+        <a href="#searchSection" class="hero-btn hero-btn-secondary">Tìm hiểu thêm</a>
+    </div>
 </header>
 
-<nav class="main-nav">
+<nav class="main-nav brand-nav">
+    <div class="nav-brand">
+        <span class="brand-dot"></span>
+        <div class="brand-text">
+            <strong>SosVel</strong>
+            <span>Smart Living Platform</span>
+        </div>
+    </div>
+
     <div class="nav-left">
         <a href="#">Trang chủ</a>
         <a href="#">Tìm phòng</a>
@@ -28,8 +46,15 @@
 </nav>
 
 <div class="container">
-    <div class="search-box">
-        <h2>Tìm phòng trọ</h2>
+    <div class="search-box brand-search-box" id="searchSection">
+        <div class="search-heading">
+            <span class="section-badge">Tìm kiếm nhanh</span>
+            <h2>Khám phá không gian sống phù hợp với bạn</h2>
+            <p>
+                Lọc theo khu vực và ngân sách để tìm phòng trọ hoặc chung cư
+                phù hợp nhanh hơn, minh bạch hơn.
+            </p>
+        </div>
 
         <div class="filter-bar">
             <div class="filter-item">
@@ -69,7 +94,7 @@
 
             <div class="filter-action">
                 <button type="button" id="searchBtn" class="search-btn">
-                    Tìm kiếm
+                    Tìm kiếm ngay
                 </button>
             </div>
         </div>
