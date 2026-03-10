@@ -79,7 +79,6 @@
     <div class="pagination" id="pagination"></div>
 </div>
 
-<!-- MODAL CHI TIẾT PHÒNG -->
 <div class="modal hidden" id="roomModal">
     <div class="modal-overlay" id="modalOverlay"></div>
 
@@ -121,7 +120,6 @@
     </div>
 </div>
 
-<!-- MODAL HỢP ĐỒNG -->
 <div class="modal hidden" id="contractModal">
     <div class="modal-overlay" id="contractOverlay"></div>
 
@@ -229,21 +227,35 @@
     </div>
 </div>
 
-<!-- CHAT BOX -->
 <div id="chatBox" class="chat-box hidden">
     <div class="chat-header">
         <div>
             <strong id="chatRoomTitle">Chat với chủ trọ</strong>
-            <div class="chat-subtitle" id="chatOwnerName">Chủ trọ đang online</div>
+            <div class="chat-subtitle" id="chatOwnerName">Hỗ trợ tư vấn phòng trọ</div>
         </div>
         <span id="chatClose">✖</span>
     </div>
 
     <div id="chatMessages" class="chat-messages"></div>
 
-    <div class="chat-input">
-        <input id="chatInput" type="text" placeholder="Nhập tin nhắn...">
-        <button id="sendChat" type="button">Gửi</button>
+    <div id="quickQuestions" class="quick-questions hidden">
+        <button type="button" class="quick-btn" data-question="included">
+            Giá đã bao gồm điện nước chưa?
+        </button>
+
+        <button type="button" class="quick-btn" data-question="available">
+            Phòng này còn không?
+        </button>
+
+        <button type="button" class="quick-btn" data-question="capacity">
+            Bao nhiêu người ở được?
+        </button>
+    </div>
+
+    <div id="moreQuestionWrap" class="more-question-wrap hidden">
+        <button type="button" id="moreQuestionBtn" class="more-question-btn">
+            Hỏi thêm
+        </button>
     </div>
 </div>
 
