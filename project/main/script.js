@@ -33,6 +33,7 @@ let currentPage = 1;
 let filteredRooms = [];
 let currentRoom = null;
 let chatData = {};
+let askedQuestions = {};
 let signatureCanvas = null;
 let signatureCtx = null;
 let isDrawing = false;
@@ -323,27 +324,61 @@ function closeRoomDetail() {
     document.getElementById("roomModal").classList.add("hidden");
 }
 
+function getAutoReply(type) {
+    if (!currentRoom) return "";
+
+    if (type === "included") {
+        return "Giá phòng hiện chưa bao gồm điện nước. Chi phí điện nước sẽ được tính minh bạch theo mức sử dụng thực tế.";
+    }
+
+    if (type === "available") {
+        return `Phòng ${currentRoom.title} hiện vẫn còn trống và bạn có thể liên hệ để giữ chỗ sớm.`;
+    }
+
+    if (type === "capacity") {
+        return "Phòng này phù hợp cho 2 đến 3 người ở, tùy theo nhu cầu sinh hoạt.";
+    }
+
+    return "SosVel sẽ phản hồi bạn sớm nhất có thể.";
+}
+
 function openChatBox() {
     if (!currentRoom) return;
 
     const chatBox = document.getElementById("chatBox");
-    const chatMessages = document.getElementById("chatMessages");
     const chatRoomTitle = document.getElementById("chatRoomTitle");
     const chatOwnerName = document.getElementById("chatOwnerName");
+    const quickQuestions = document.getElementById("quickQuestions");
+    const moreQuestionWrap = document.getElementById("moreQuestionWrap");
 
     chatRoomTitle.textContent = currentRoom.title;
-    chatOwnerName.textContent = `${currentRoom.ownerName} • Chủ trọ`;
+    chatOwnerName.textContent = "Hỗ trợ tư vấn phòng trọ";
 
     chatData[currentRoom.id] = [
         {
             sender: "owner",
-            text: "Chủ trọ sẽ liên hệ lại với bạn sớm nhất có thể."
+            text: "Xin chào, bạn có thể chọn câu hỏi bên dưới để được hỗ trợ nhanh."
         }
     ];
 
+    askedQuestions[currentRoom.id] = {
+        included: false,
+        available: false,
+        capacity: false,
+        done: false
+    };
+
     renderChatMessages();
+
+    quickQuestions.classList.remove("hidden");
+    moreQuestionWrap.classList.add("hidden");
+
+    const buttons = quickQuestions.querySelectorAll(".quick-btn");
+    buttons.forEach(btn => {
+        btn.disabled = false;
+    });
+
     chatBox.classList.remove("hidden");
-    chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
 function renderChatMessages() {
@@ -352,7 +387,9 @@ function renderChatMessages() {
     const chatMessages = document.getElementById("chatMessages");
     chatMessages.innerHTML = "";
 
-    chatData[currentRoom.id].forEach(msg => {
+    const messages = chatData[currentRoom.id] || [];
+
+    messages.forEach(msg => {
         const div = document.createElement("div");
         div.className = `message ${msg.sender}`;
         div.textContent = msg.text;
@@ -362,21 +399,64 @@ function renderChatMessages() {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-function sendMessage() {
+function handleQuickQuestion(type, buttonEl) {
     if (!currentRoom) return;
 
-    const input = document.getElementById("chatInput");
-    const text = input.value.trim();
+    const roomId = currentRoom.id;
+    const state = askedQuestions[roomId];
+    if (!state || state[type]) return;
 
-    if (!text) return;
+    const questionMap = {
+        included: "Giá đã bao gồm điện nước chưa?",
+        available: "Phòng này còn không?",
+        capacity: "Bao nhiêu người ở được?"
+    };
 
-    chatData[currentRoom.id].push({
+    chatData[roomId].push({
         sender: "user",
-        text: text
+        text: questionMap[type]
     });
 
-    input.value = "";
+    chatData[roomId].push({
+        sender: "owner",
+        text: getAutoReply(type)
+    });
+
+    state[type] = true;
+
+    if (buttonEl) {
+        buttonEl.disabled = true;
+    }
+
     renderChatMessages();
+
+    const doneAll = state.included && state.available && state.capacity;
+
+    if (doneAll && !state.done) {
+        state.done = true;
+        document.getElementById("moreQuestionWrap").classList.remove("hidden");
+    }
+}
+
+function handleMoreQuestion() {
+    if (!currentRoom) return;
+
+    const roomId = currentRoom.id;
+
+    chatData[roomId].push({
+        sender: "user",
+        text: "Hỏi thêm"
+    });
+
+    chatData[roomId].push({
+        sender: "owner",
+        text: "Cảm ơn bạn, SosVel sẽ liên hệ trong 15 phút."
+    });
+
+    renderChatMessages();
+
+    document.getElementById("moreQuestionWrap").classList.add("hidden");
+    document.getElementById("quickQuestions").classList.add("hidden");
 }
 
 function formatContractDate(date = new Date()) {
@@ -559,11 +639,12 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("chatBox").classList.add("hidden");
     });
 
-    document.getElementById("sendChat").addEventListener("click", sendMessage);
-
-    document.getElementById("chatInput").addEventListener("keydown", function (e) {
-        if (e.key === "Enter") {
-            sendMessage();
-        }
+    document.querySelectorAll(".quick-btn").forEach(btn => {
+        btn.addEventListener("click", function () {
+            const type = this.dataset.question;
+            handleQuickQuestion(type, this);
+        });
     });
+
+    document.getElementById("moreQuestionBtn").addEventListener("click", handleMoreQuestion);
 });
