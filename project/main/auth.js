@@ -11,7 +11,22 @@ function setCurrentUser(user) {
 }
 
 function getCurrentUser() {
-    return JSON.parse(localStorage.getItem("sosvel_current_user"));
+    return JSON.parse(localStorage.getItem("sosvel_current_user")) || null;
+}
+
+function updateCurrentUser(user) {
+    localStorage.setItem("sosvel_current_user", JSON.stringify(user));
+}
+
+function updateUserInStorage(updatedUser) {
+    const users = getUsers();
+    const index = users.findIndex(u => u.email === updatedUser.email);
+
+    if (index !== -1) {
+        users[index] = updatedUser;
+        saveUsers(users);
+        updateCurrentUser(updatedUser);
+    }
 }
 
 function logout() {
@@ -28,6 +43,87 @@ function requireLogin() {
     return true;
 }
 
+function getLoyaltyTier(points = 0) {
+    if (points >= 1000) return "Vàng";
+    if (points >= 500) return "Bạc";
+    return "Đồng";
+}
+
+function getTransactions() {
+    const user = getCurrentUser();
+    if (!user) return [];
+    return JSON.parse(localStorage.getItem(`sosvel_transactions_${user.email}`)) || [];
+}
+
+function saveTransactions(transactions) {
+    const user = getCurrentUser();
+    if (!user) return;
+    localStorage.setItem(`sosvel_transactions_${user.email}`, JSON.stringify(transactions));
+}
+
+function addTransaction(transaction) {
+    const transactions = getTransactions();
+    transactions.unshift({
+        ...transaction,
+        createdAt: new Date().toISOString()
+    });
+    saveTransactions(transactions);
+}
+
+function addPoints(points, reason = "Tích điểm") {
+    const user = getCurrentUser();
+    if (!user) return;
+
+    user.points = (user.points || 0) + points;
+    user.loyaltyTier = getLoyaltyTier(user.points);
+    updateUserInStorage(user);
+
+    addTransaction({
+        type: "point",
+        amount: points,
+        direction: "in",
+        description: `${reason} (+${points} điểm)`
+    });
+}
+
+function addBalance(amount) {
+    const user = getCurrentUser();
+    if (!user) return false;
+
+    user.balance = (user.balance || 0) + amount;
+    updateUserInStorage(user);
+
+    addTransaction({
+        type: "deposit",
+        amount,
+        direction: "in",
+        description: "Nạp tiền vào ví SosVel"
+    });
+
+    return true;
+}
+
+function spendBalance(amount, description = "Chi tiêu dịch vụ") {
+    const user = getCurrentUser();
+    if (!user) return false;
+
+    if ((user.balance || 0) < amount) {
+        return false;
+    }
+
+    user.balance -= amount;
+    updateUserInStorage(user);
+
+    addTransaction({
+        type: "spend",
+        amount,
+        direction: "out",
+        description
+    });
+
+    return true;
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     const registerForm = document.getElementById("registerForm");
     const loginForm = document.getElementById("loginForm");
@@ -41,6 +137,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const cccd = document.getElementById("registerCccd").value.trim();
             const phone = document.getElementById("registerPhone").value.trim();
             const email = document.getElementById("registerEmail").value.trim().toLowerCase();
+            const role = document.getElementById("registerRole").value;
             const password = document.getElementById("registerPassword").value;
             const confirmPassword = document.getElementById("registerConfirmPassword").value;
             const message = document.getElementById("registerMessage");
@@ -64,10 +161,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 cccd,
                 phone,
                 email,
-                password
+                role,
+                password,
+                balance: 0,
+                points: 0,
+                loyaltyTier: "Đồng",
+                bio: ""
             });
 
             saveUsers(users);
+            message.style.color = "#1b5edb";
             message.textContent = "Đăng ký thành công. Đang chuyển sang đăng nhập...";
 
             setTimeout(function () {
@@ -93,6 +196,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             setCurrentUser(user);
+            message.style.color = "#1b5edb";
             message.textContent = "Đăng nhập thành công. Đang chuyển về trang chủ...";
 
             setTimeout(function () {
