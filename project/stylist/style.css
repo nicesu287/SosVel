@@ -1161,30 +1161,111 @@ body{
 
 .profile-layout{
     display:grid;
-    grid-template-columns:280px 1fr;
-    gap:20px;
+    grid-template-columns:320px 1fr;
+    gap:24px;
+    align-items:start;
 }
 
 .profile-card{
-    background:#fff;
+    background:#ffffff;
     border:1px solid #e2e8f0;
-    border-radius:16px;
-    padding:22px;
+    border-radius:20px;
+    padding:28px 24px;
     text-align:center;
+    box-shadow:0 12px 28px rgba(15,23,42,0.06);
 }
 
 .avatar-circle{
-    width:82px;
-    height:82px;
-    margin:0 auto 14px;
+    width:96px;
+    height:96px;
+    margin:0 auto 16px;
     border-radius:50%;
     display:flex;
     align-items:center;
     justify-content:center;
     background:linear-gradient(135deg,#2563eb,#06b6d4);
     color:#fff;
-    font-size:24px;
+    font-size:30px;
     font-weight:800;
+    box-shadow:0 10px 24px rgba(37,99,235,0.22);
+}
+
+.profile-card h3{
+    margin:0 0 12px;
+    font-size:28px;
+    color:#0f172a;
+}
+
+.profile-card p{
+    margin:10px 0;
+    color:#475569;
+    font-size:17px;
+}
+
+.profile-summary{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+    margin-top:18px;
+}
+
+.profile-summary-item{
+    background:#f8fbff;
+    border:1px solid #dbe3f0;
+    border-radius:14px;
+    padding:14px;
+}
+
+.profile-summary-item span{
+    display:block;
+    font-size:13px;
+    color:#64748b;
+    margin-bottom:6px;
+}
+
+.profile-summary-item strong{
+    font-size:18px;
+    color:#0f172a;
+}
+
+.profile-form-card{
+    background:#ffffff;
+    border:1px solid #e2e8f0;
+    border-radius:20px;
+    padding:26px;
+    box-shadow:0 12px 28px rgba(15,23,42,0.06);
+}
+
+.profile-form-card h3{
+    margin:0 0 18px;
+    font-size:24px;
+    color:#0f172a;
+}
+
+.profile-form-card .post-grid{
+    gap:20px;
+}
+
+.profile-form-card input,
+.profile-form-card textarea{
+    width:100%;
+    border:1px solid #cfd8e3;
+    border-radius:12px;
+    padding:12px 14px;
+    box-sizing:border-box;
+    font:inherit;
+    background:#fff;
+}
+
+.profile-form-card input:focus,
+.profile-form-card textarea:focus{
+    outline:none;
+    border-color:#2563eb;
+    box-shadow:0 0 0 4px rgba(37,99,235,0.10);
+}
+
+.profile-form-card .auth-btn{
+    min-width:170px;
 }
 
 /* TRANSITIONS */
@@ -1237,6 +1318,10 @@ footer{
     .listing-card-grid,
     .profile-layout{
         grid-template-columns:1fr;
+    }
+
+    .profile-summary{
+        grid-template-columns:1fr 1fr;
     }
 
     .full-width-filter{
