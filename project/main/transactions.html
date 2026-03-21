@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch sử giao dịch - SosVel</title>
+    <link rel="stylesheet" href="../stylist/style.css">
+</head>
+<body>
+<nav class="main-nav brand-nav">
+    <div class="nav-brand">
+        <span class="brand-dot"></span>
+        <div class="brand-text">
+            <strong>SosVel</strong>
+            <span>Smart Living Platform</span>
+        </div>
+    </div>
+
+    <div class="nav-left">
+        <a href="index.html">Trang chủ</a>
+        <a href="wallet.html">Ví tài khoản</a>
+        <a href="transactions.html">Lịch sử giao dịch</a>
+    </div>
+
+    <div class="nav-right" id="authNav"></div>
+</nav>
+
+<div class="container">
+    <div class="search-box brand-search-box">
+        <div class="search-heading">
+            <span class="section-badge">Lịch sử</span>
+            <h2>Lịch sử giao dịch tài khoản</h2>
+            <p>Theo dõi các khoản nạp, chi tiêu gói dịch vụ và đặt cọc phòng trong demo.</p>
+        </div>
+
+        <div id="transactionList" class="transaction-list"></div>
+    </div>
+</div>
+
+<script src="auth.js"></script>
+<script src="transactions.js"></script>
+</body>
+</html>
