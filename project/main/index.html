@@ -21,6 +21,10 @@
         <a href="#roomContainer" class="hero-btn hero-btn-primary">Khám phá phòng</a>
         <a href="#searchSection" class="hero-btn hero-btn-secondary">Tìm hiểu thêm</a>
     </div>
+
+    <div class="promo-banner">
+        🎉 Khuyến mãi tháng này: Giảm 20% gói Premium cho chủ trọ mới • Dùng mã <strong>PREMIUM20</strong>
+    </div>
 </header>
 
 <nav class="main-nav brand-nav">
@@ -33,10 +37,14 @@
     </div>
 
     <div class="nav-left">
-        <a href="#">Trang chủ</a>
-        <a href="#">Tìm phòng</a>
-        <a href="#">Đăng phòng</a>
-        <a href="#">Liên hệ</a>
+        <a href="index.html">Trang chủ</a>
+        <a href="#roomContainer">Tìm phòng</a>
+        <a href="post-room.html">Đăng phòng</a>
+        <a href="my-posts.html">Phòng đã đăng</a>
+        <a href="profile.html">Hồ sơ cá nhân</a>
+        <a href="#" id="savedSearchBtn">Tìm kiếm đã lưu</a>
+        <a href="#" id="roommateNavBtn">Ghép người ở</a>
+        <a href="#" id="contactNavBtn">Liên hệ</a>
     </div>
 
     <div class="nav-right" id="authNav">
@@ -46,17 +54,19 @@
 </nav>
 
 <div class="container">
+    <div class="dashboard-strip" id="dashboardStrip"></div>
+
     <div class="search-box brand-search-box" id="searchSection">
         <div class="search-heading">
             <span class="section-badge">Tìm kiếm nhanh</span>
             <h2>Khám phá không gian sống phù hợp với bạn</h2>
             <p>
-                Lọc theo khu vực và ngân sách để tìm phòng trọ hoặc chung cư
+                Lọc theo khu vực, ngân sách và loại phòng để tìm phòng trọ hoặc chung cư
                 phù hợp nhanh hơn, minh bạch hơn.
             </p>
         </div>
 
-        <div class="filter-bar">
+        <div class="filter-bar filter-bar-advanced">
             <div class="filter-item">
                 <label for="areaInput">Khu vực</label>
                 <select id="areaInput">
@@ -70,7 +80,28 @@
                 </select>
             </div>
 
-            <div class="filter-item price-filter">
+            <div class="filter-item">
+                <label for="typeInput">Loại phòng</label>
+                <select id="typeInput">
+                    <option value="">Tất cả loại phòng</option>
+                    <option value="Phòng trọ">Phòng trọ</option>
+                    <option value="Chung cư mini">Chung cư mini</option>
+                    <option value="Ở ghép">Ở ghép</option>
+                </select>
+            </div>
+
+            <div class="filter-item">
+                <label for="minSizeInput">Diện tích tối thiểu</label>
+                <select id="minSizeInput">
+                    <option value="0">Không yêu cầu</option>
+                    <option value="16">Từ 16m²</option>
+                    <option value="18">Từ 18m²</option>
+                    <option value="20">Từ 20m²</option>
+                    <option value="24">Từ 24m²</option>
+                </select>
+            </div>
+
+            <div class="filter-item price-filter full-width-filter">
                 <label for="priceInput">
                     Giá tối đa:
                     <span id="priceValue">5.000.000+</span>
@@ -100,6 +131,7 @@
         </div>
     </div>
 
+    <div class="favorite-bar" id="favoriteBar"></div>
     <div class="rooms" id="roomContainer"></div>
     <div class="pagination" id="pagination"></div>
 </div>
@@ -122,7 +154,10 @@
                 <p id="modalArea"></p>
                 <p id="modalAddress"></p>
                 <p id="modalSize"></p>
+                <p id="modalType"></p>
                 <p id="modalDesc"></p>
+
+                <div class="listing-profile" id="listingProfile"></div>
 
                 <div class="feature-list">
                     <span>✅ Điện nước minh bạch</span>
@@ -131,14 +166,12 @@
                     <span>✅ Có chỗ để xe</span>
                 </div>
 
-                <div class="modal-actions">
-                    <button id="contactBtn" class="contact-btn" type="button">
-                        Liên hệ
-                    </button>
-
-                    <button id="contractBtn" class="contract-btn" type="button">
-                        Kí hợp đồng online
-                    </button>
+                <div class="modal-actions modal-actions-wrap">
+                    <button id="favoriteBtn" class="secondary-btn" type="button">Lưu phòng</button>
+                    <button id="shareBtn" class="secondary-btn" type="button">Chia sẻ phòng</button>
+                    <button id="engagementBtn" class="secondary-btn" type="button">React / Comment</button>
+                    <button id="contactBtn" class="contact-btn" type="button">Liên hệ</button>
+                    <button id="contractBtn" class="contract-btn" type="button">Kí hợp đồng online</button>
                 </div>
             </div>
         </div>
@@ -150,6 +183,15 @@
 
     <div class="contract-content contract-doc-wrap">
         <button id="contractClose" class="modal-close" type="button">×</button>
+
+        <div class="contract-type-box">
+            <label for="contractTemplateSelect"><strong>Mẫu hợp đồng</strong></label>
+            <select id="contractTemplateSelect">
+                <option value="deposit">Hợp đồng đặt cọc</option>
+                <option value="rent">Hợp đồng thuê phòng</option>
+                <option value="receipt">Biên nhận thanh toán</option>
+            </select>
+        </div>
 
         <div id="contractDocument" class="contract-document">
             <div class="contract-header">
@@ -239,16 +281,116 @@
             </div>
         </div>
 
+        <div class="pre-deposit-checklist">
+            <h3>Tư vấn trước khi cọc</h3>
+            <label><input type="checkbox" class="deposit-check"> Đã hỏi rõ điện, nước và phí phát sinh</label>
+            <label><input type="checkbox" class="deposit-check"> Đã xác nhận số người ở và nội quy</label>
+            <label><input type="checkbox" class="deposit-check"> Đã kiểm tra ảnh, địa chỉ và tình trạng phòng</label>
+            <label><input type="checkbox" class="deposit-check"> Đã thống nhất thời gian vào ở</label>
+        </div>
+
+        <div class="payment-schedule-box" id="paymentScheduleBox"></div>
+
         <div class="contract-toolbar">
-            <button type="button" id="downloadPdfBtn" class="secondary-btn">
-                Xuất PDF
-            </button>
-            <button type="button" id="confirmContract" class="contract-submit-btn">
-                Xác nhận ký hợp đồng
-            </button>
+            <button type="button" id="downloadPdfBtn" class="secondary-btn">Xuất PDF</button>
+            <button type="button" id="cancelBookingBtn" class="secondary-btn">Hủy giao dịch</button>
+            <button type="button" id="confirmContract" class="contract-submit-btn">Xác nhận ký hợp đồng</button>
         </div>
 
         <p id="contractMessage" class="contract-message"></p>
+    </div>
+</div>
+
+<div class="modal hidden" id="contactModal">
+    <div class="modal-overlay" id="contactOverlay"></div>
+    <div class="modal-content contact-box">
+        <button id="contactClose" class="modal-close" type="button">×</button>
+        <h2>Thông tin liên hệ</h2>
+        <p><strong>Gmail:</strong> lequangdung28@gmail.com</p>
+        <p><strong>Số điện thoại:</strong> 0987654321</p>
+        <p>Nếu bạn cần hỗ trợ đăng phòng, đặt phòng hoặc tư vấn dịch vụ, vui lòng liên hệ trực tiếp.</p>
+    </div>
+</div>
+
+<div class="modal hidden" id="noticeModal">
+    <div class="modal-overlay" id="noticeOverlay"></div>
+    <div class="modal-content notice-box">
+        <button id="noticeClose" class="modal-close" type="button">×</button>
+        <h2 id="noticeTitle">Thông báo</h2>
+        <p id="noticeText"></p>
+    </div>
+</div>
+
+<div class="modal hidden" id="roommateModal">
+    <div class="modal-overlay" id="roommateOverlay"></div>
+    <div class="modal-content roommate-box">
+        <button id="roommateClose" class="modal-close" type="button">×</button>
+        <h2>Ghép người ở</h2>
+        <form id="roommateForm" class="post-room-form">
+            <div class="post-grid">
+                <div class="filter-item">
+                    <label for="roommateName">Họ tên</label>
+                    <input type="text" id="roommateName" required>
+                </div>
+                <div class="filter-item">
+                    <label for="roommateGender">Giới tính</label>
+                    <select id="roommateGender" required>
+                        <option value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
+                        <option value="Khác">Khác</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label for="roommateBudget">Ngân sách</label>
+                    <input type="number" id="roommateBudget" required>
+                </div>
+                <div class="filter-item">
+                    <label for="roommatePeople">Số người mong muốn</label>
+                    <input type="number" id="roommatePeople" min="1" max="6" value="2" required>
+                </div>
+                <div class="filter-item full-span">
+                    <label for="roommateNote">Ghi chú</label>
+                    <textarea id="roommateNote" rows="4"></textarea>
+                </div>
+            </div>
+            <div class="wallet-summary" id="sharedCostEstimate"></div>
+            <button type="submit" class="auth-btn">Gửi nhu cầu ghép người ở</button>
+            <p id="roommateMessage" class="auth-message"></p>
+        </form>
+    </div>
+</div>
+
+<div class="modal hidden" id="engagementModal">
+    <div class="modal-overlay" id="engagementOverlay"></div>
+    <div class="modal-content engagement-box">
+        <button id="engagementClose" class="modal-close" type="button">×</button>
+        <h2>Tương tác bài viết</h2>
+        <div class="engagement-actions">
+            <button class="react-btn" data-react="like">👍 Thích</button>
+            <button class="react-btn" data-react="love">❤️ Yêu thích</button>
+            <button class="react-btn" data-react="wow">😮 Ấn tượng</button>
+        </div>
+        <div id="reactionSummary" class="wallet-summary"></div>
+        <form id="commentForm" class="auth-form">
+            <label for="commentInput">Bình luận</label>
+            <textarea id="commentInput" rows="4" required></textarea>
+            <button type="submit" class="auth-btn">Gửi bình luận</button>
+        </form>
+        <div id="commentList" class="comment-list"></div>
+    </div>
+</div>
+
+<div class="modal hidden" id="savedSearchModal">
+    <div class="modal-overlay" id="savedSearchOverlay"></div>
+    <div class="modal-content notice-box">
+        <button id="savedSearchClose" class="modal-close" type="button">×</button>
+        <h2>Lưu tìm kiếm yêu thích</h2>
+        <form id="savedSearchForm" class="auth-form">
+            <label for="savedSearchName">Tên bộ lọc</label>
+            <input type="text" id="savedSearchName" placeholder="Ví dụ: Phòng dưới 3 triệu ở Thủ Đức" required>
+            <button type="submit" class="auth-btn">Lưu tìm kiếm</button>
+        </form>
+        <div id="savedSearchList" class="transaction-list"></div>
     </div>
 </div>
 
@@ -264,23 +406,13 @@
     <div id="chatMessages" class="chat-messages"></div>
 
     <div id="quickQuestions" class="quick-questions hidden">
-        <button type="button" class="quick-btn" data-question="included">
-            Giá đã bao gồm điện nước chưa?
-        </button>
-
-        <button type="button" class="quick-btn" data-question="available">
-            Phòng này còn không?
-        </button>
-
-        <button type="button" class="quick-btn" data-question="capacity">
-            Bao nhiêu người ở được?
-        </button>
+        <button type="button" class="quick-btn" data-question="included">Giá đã bao gồm điện nước chưa?</button>
+        <button type="button" class="quick-btn" data-question="available">Phòng này còn không?</button>
+        <button type="button" class="quick-btn" data-question="capacity">Bao nhiêu người ở được?</button>
     </div>
 
     <div id="moreQuestionWrap" class="more-question-wrap hidden">
-        <button type="button" id="moreQuestionBtn" class="more-question-btn">
-            Hỏi thêm
-        </button>
+        <button type="button" id="moreQuestionBtn" class="more-question-btn">Hỏi thêm</button>
     </div>
 </div>
 
