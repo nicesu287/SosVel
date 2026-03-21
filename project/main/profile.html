@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ sơ cá nhân - SosVel</title>
+    <link rel="stylesheet" href="../stylist/style.css">
+</head>
+<body>
+<nav class="main-nav brand-nav">
+    <div class="nav-brand">
+        <span class="brand-dot"></span>
+        <div class="brand-text">
+            <strong>SosVel</strong>
+            <span>Smart Living Platform</span>
+        </div>
+    </div>
+
+    <div class="nav-left">
+        <a href="index.html">Trang chủ</a>
+        <a href="wallet.html">Ví tài khoản</a>
+        <a href="transactions.html">Lịch sử</a>
+        <a href="profile.html">Hồ sơ cá nhân</a>
+    </div>
+
+    <div class="nav-right" id="authNav"></div>
+</nav>
+
+<div class="container">
+    <div class="search-box brand-search-box">
+        <div class="search-heading">
+            <span class="section-badge">Hồ sơ</span>
+            <h2>Trang hồ sơ cá nhân</h2>
+            <p>Cập nhật thông tin, theo dõi cấp bậc tài khoản và điểm thưởng.</p>
+        </div>
+
+        <div class="profile-layout">
+            <div class="profile-card">
+                <div class="avatar-circle" id="profileAvatar">SV</div>
+                <h3 id="profileName"></h3>
+                <p id="profileRole"></p>
+                <p id="profileTier"></p>
+                <p id="profilePoints"></p>
+                <p id="profileBalance"></p>
+            </div>
+
+            <form id="profileForm" class="post-room-form">
+                <div class="post-grid">
+                    <div class="filter-item">
+                        <label for="profileNameInput">Họ tên</label>
+                        <input type="text" id="profileNameInput" required>
+                    </div>
+
+                    <div class="filter-item">
+                        <label for="profilePhoneInput">Số điện thoại</label>
+                        <input type="text" id="profilePhoneInput">
+                    </div>
+
+                    <div class="filter-item full-span">
+                        <label for="profileBioInput">Mô tả ngắn</label>
+                        <textarea id="profileBioInput" rows="4"></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="auth-btn">Lưu hồ sơ</button>
+                <p id="profileMessage" class="auth-message"></p>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="auth.js"></script>
+<script src="profile.js"></script>
+</body>
+</html>
