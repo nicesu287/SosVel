@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phòng đã đăng - SosVel</title>
+    <link rel="stylesheet" href="../stylist/style.css">
+</head>
+<body>
+<nav class="main-nav brand-nav">
+    <div class="nav-brand">
+        <span class="brand-dot"></span>
+        <div class="brand-text">
+            <strong>SosVel</strong>
+            <span>Smart Living Platform</span>
+        </div>
+    </div>
+
+    <div class="nav-left">
+        <a href="index.html">Trang chủ</a>
+        <a href="post-room.html">Đăng phòng</a>
+        <a href="my-posts.html">Phòng đã đăng</a>
+    </div>
+
+    <div class="nav-right" id="authNav"></div>
+</nav>
+
+<div class="container">
+    <div class="search-box brand-search-box">
+        <div class="search-heading">
+            <span class="section-badge">Quản lý bài đăng</span>
+            <h2>Danh sách phòng đã đăng</h2>
+            <p>Theo dõi trạng thái gói hiển thị, ngày hết hạn và tình trạng bài đăng.</p>
+        </div>
+
+        <div id="myPostsList" class="my-post-list"></div>
+    </div>
+
+    <div class="search-box brand-search-box" style="margin-top:20px;">
+        <div class="search-heading">
+            <span class="section-badge">Nhật ký thay đổi</span>
+            <h2>Lịch sử cập nhật bài đăng</h2>
+            <p>Theo dõi các thay đổi gần đây trên bài đăng của bạn.</p>
+        </div>
+        <div id="changeLogList" class="transaction-list"></div>
+    </div>
+</div>
+
+<script src="auth.js"></script>
+<script src="my-posts.js"></script>
+</body>
+</html>
