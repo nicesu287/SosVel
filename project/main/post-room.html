@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng phòng - SosVel</title>
+    <link rel="stylesheet" href="../stylist/style.css">
+</head>
+<body>
+<nav class="main-nav brand-nav">
+    <div class="nav-brand">
+        <span class="brand-dot"></span>
+        <div class="brand-text">
+            <strong>SosVel</strong>
+            <span>Smart Living Platform</span>
+        </div>
+    </div>
+
+    <div class="nav-left">
+        <a href="index.html">Trang chủ</a>
+        <a href="index.html#roomContainer">Tìm phòng</a>
+        <a href="post-room.html">Đăng phòng</a>
+        <a href="my-posts.html">Phòng đã đăng</a>
+    </div>
+
+    <div class="nav-right" id="authNav"></div>
+</nav>
+
+<div class="container">
+    <div class="search-box brand-search-box">
+        <div class="search-heading">
+            <span class="section-badge">Đăng phòng</span>
+            <h2>Đăng thông tin phòng và chọn gói dịch vụ</h2>
+            <p>Chủ trọ điền thông tin, tải hình ảnh và chọn gói hiển thị phù hợp để tiếp cận người thuê hiệu quả hơn.</p>
+        </div>
+
+        <form id="postRoomForm" class="post-room-form">
+            <div class="post-grid">
+                <div class="filter-item">
+                    <label for="ownerFullName">Tên chủ trọ</label>
+                    <input type="text" id="ownerFullName" required>
+                </div>
+
+                <div class="filter-item">
+                    <label for="ownerPhoneInput">Số điện thoại</label>
+                    <input type="text" id="ownerPhoneInput" required>
+                </div>
+
+                <div class="filter-item">
+                    <label for="roomTitleInput">Tên phòng</label>
+                    <input type="text" id="roomTitleInput" required>
+                </div>
+
+                <div class="filter-item">
+                    <label for="roomAreaInput">Khu vực</label>
+                    <select id="roomAreaInput" required>
+                        <option value="">Chọn khu vực</option>
+                        <option value="Đông Hòa">Đông Hòa</option>
+                        <option value="Dĩ An">Dĩ An</option>
+                        <option value="Thủ Đức">Thủ Đức</option>
+                        <option value="Suối Tiên">Suối Tiên</option>
+                        <option value="Linh Trung">Linh Trung</option>
+                        <option value="Bình Thọ">Bình Thọ</option>
+                    </select>
+                </div>
+
+                <div class="filter-item">
+                    <label for="roomTypeInput">Loại phòng</label>
+                    <select id="roomTypeInput" required>
+                        <option value="Phòng trọ">Phòng trọ</option>
+                        <option value="Chung cư mini">Chung cư mini</option>
+                        <option value="Ở ghép">Ở ghép</option>
+                    </select>
+                </div>
+
+                <div class="filter-item">
+                    <label for="roomPriceInput">Giá phòng</label>
+                    <input type="number" id="roomPriceInput" required>
+                </div>
+
+                <div class="filter-item">
+                    <label for="roomSizeInput">Diện tích</label>
+                    <input type="text" id="roomSizeInput" placeholder="Ví dụ: 20m²" required>
+                </div>
+
+                <div class="filter-item full-span">
+                    <label for="roomAddressInput">Địa chỉ</label>
+                    <input type="text" id="roomAddressInput" required>
+                </div>
+
+                <div class="filter-item full-span">
+                    <label for="roomDescInput">Mô tả</label>
+                    <textarea id="roomDescInput" rows="5" required></textarea>
+                </div>
+
+                <div class="filter-item full-span">
+                    <label for="roomImagesInput">Hình ảnh đăng tải</label>
+                    <input type="file" id="roomImagesInput" multiple accept="image/*">
+                    <p class="helper-text">Demo sẽ lưu tên ảnh và dùng ảnh mẫu để hiển thị.</p>
+                </div>
+            </div>
+
+            <div class="package-section">
+                <h3>Chọn gói dịch vụ</h3>
+
+                <div class="package-grid">
+                    <label class="package-card">
+                        <input type="radio" name="servicePackage" value="50000" checked>
+                        <h4>Gói Cơ bản</h4>
+                        <p>Hiển thị 7 ngày</p>
+                        <strong>50.000 VNĐ</strong>
+                    </label>
+
+                    <label class="package-card">
+                        <input type="radio" name="servicePackage" value="120000">
+                        <h4>Gói Nổi bật</h4>
+                        <p>Hiển thị 15 ngày + ưu tiên</p>
+                        <strong>120.000 VNĐ</strong>
+                    </label>
+
+                    <label class="package-card">
+                        <input type="radio" name="servicePackage" value="250000">
+                        <h4>Gói Premium</h4>
+                        <p>Hiển thị 30 ngày + ưu tiên cao</p>
+                        <strong>250.000 VNĐ</strong>
+                    </label>
+                </div>
+            </div>
+
+            <div class="wallet-summary">
+                <p><strong>Mã khuyến mãi</strong></p>
+                <input type="text" id="promoCodeInput" placeholder="Ví dụ: PREMIUM20">
+                <p id="promoNote" class="helper-text">Chủ trọ mới được giảm 20% gói Premium với mã PREMIUM20.</p>
+            </div>
+
+            <div class="upgrade-suggestion-box">
+                <h3>Gợi ý nâng cấp gói</h3>
+                <p>Gói Premium giúp bài đăng có ưu tiên hiển thị cao nhất và tiếp cận nhiều người thuê hơn.</p>
+            </div>
+
+            <div class="wallet-summary">
+                <p><strong>Số dư hiện tại:</strong> <span id="postPageBalance">0</span> VNĐ</p>
+                <p><strong>Hoa hồng nền tảng:</strong> 5% giá trị giao dịch đặt cọc thành công</p>
+            </div>
+
+            <button type="submit" class="auth-btn">Đăng phòng và thanh toán gói</button>
+            <p id="postRoomMessage" class="auth-message"></p>
+        </form>
+    </div>
+</div>
+
+<script src="auth.js"></script>
+<script src="post-room.js"></script>
+</body>
+</html>
