@@ -39,32 +39,55 @@
                 <div class="avatar-circle" id="profileAvatar">SV</div>
                 <h3 id="profileName"></h3>
                 <p id="profileRole"></p>
-                <p id="profileTier"></p>
-                <p id="profilePoints"></p>
-                <p id="profileBalance"></p>
-            </div>
 
-            <form id="profileForm" class="post-room-form">
-                <div class="post-grid">
-                    <div class="filter-item">
-                        <label for="profileNameInput">Họ tên</label>
-                        <input type="text" id="profileNameInput" required>
+                <div class="profile-summary">
+                    <div class="profile-summary-item">
+                        <span>Cấp bậc</span>
+                        <strong id="profileTier"></strong>
                     </div>
 
-                    <div class="filter-item">
-                        <label for="profilePhoneInput">Số điện thoại</label>
-                        <input type="text" id="profilePhoneInput">
+                    <div class="profile-summary-item">
+                        <span>Điểm thưởng</span>
+                        <strong id="profilePoints"></strong>
                     </div>
 
-                    <div class="filter-item full-span">
-                        <label for="profileBioInput">Mô tả ngắn</label>
-                        <textarea id="profileBioInput" rows="4"></textarea>
+                    <div class="profile-summary-item">
+                        <span>Số dư</span>
+                        <strong id="profileBalance"></strong>
+                    </div>
+
+                    <div class="profile-summary-item">
+                        <span>Trạng thái</span>
+                        <strong>Đang hoạt động</strong>
                     </div>
                 </div>
+            </div>
 
-                <button type="submit" class="auth-btn">Lưu hồ sơ</button>
-                <p id="profileMessage" class="auth-message"></p>
-            </form>
+            <div class="profile-form-card">
+                <h3>Chỉnh sửa thông tin cá nhân</h3>
+
+                <form id="profileForm" class="post-room-form">
+                    <div class="post-grid">
+                        <div class="filter-item">
+                            <label for="profileNameInput">Họ tên</label>
+                            <input type="text" id="profileNameInput" required>
+                        </div>
+
+                        <div class="filter-item">
+                            <label for="profilePhoneInput">Số điện thoại</label>
+                            <input type="text" id="profilePhoneInput">
+                        </div>
+
+                        <div class="filter-item full-span">
+                            <label for="profileBioInput">Mô tả ngắn</label>
+                            <textarea id="profileBioInput" rows="5" placeholder="Giới thiệu ngắn về bạn..."></textarea>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="auth-btn">Lưu hồ sơ</button>
+                    <p id="profileMessage" class="auth-message"></p>
+                </form>
+            </div>
         </div>
     </div>
 </div>
