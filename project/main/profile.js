@@ -20,12 +20,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function renderProfile() {
         const current = getCurrentUser();
+
         profileName.textContent = current.name;
         profileRole.textContent = `Vai trò: ${current.role === "landlord" ? "Chủ trọ" : "Người thuê"}`;
-        profileTier.textContent = `Cấp bậc: ${current.loyaltyTier || "Đồng"}`;
-        profilePoints.textContent = `Điểm thưởng: ${current.points || 0}`;
-        profileBalance.textContent = `Số dư: ${(current.balance || 0).toLocaleString("vi-VN")} VNĐ`;
-        avatar.textContent = current.name.split(" ").slice(-2).map(x => x[0]).join("").toUpperCase();
+        profileTier.textContent = current.loyaltyTier || "Đồng";
+        profilePoints.textContent = current.points || 0;
+        profileBalance.textContent = `${(current.balance || 0).toLocaleString("vi-VN")} VNĐ`;
+
+        avatar.textContent = current.name
+            .split(" ")
+            .slice(-2)
+            .map(x => x[0])
+            .join("")
+            .toUpperCase();
 
         document.getElementById("profileNameInput").value = current.name || "";
         document.getElementById("profilePhoneInput").value = current.phone || "";
@@ -46,6 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         message.style.color = "#1b5edb";
         message.textContent = "Cập nhật hồ sơ thành công.";
+
         renderProfile();
     });
 });
