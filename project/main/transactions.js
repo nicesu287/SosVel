@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
             <div class="transaction-amount ${item.direction}">
                 ${item.direction === "in" ? "+" : "-"}${Number(item.amount).toLocaleString("vi-VN")}
-                ${item.type === "point" ? "điểm" : "VNĐ"}
+                ${item.type === "point" ? " điểm" : " VNĐ"}
             </div>
         </div>
     `).join("");
