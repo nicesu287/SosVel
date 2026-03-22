@@ -7,9 +7,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("postRoomForm");
     const message = document.getElementById("postRoomMessage");
     const promoCodeInput = document.getElementById("promoCodeInput");
+    const agreement = document.getElementById("postAgreement");
 
     if (user.role !== "landlord") {
         message.textContent = "Chỉ tài khoản chủ trọ mới được đăng phòng.";
+        form.style.display = "none";
+        return;
+    }
+
+    if (user.isLocked) {
+        message.textContent = "Tài khoản của bạn đã bị khóa vĩnh viễn.";
         form.style.display = "none";
         return;
     }
@@ -35,7 +42,17 @@ document.addEventListener("DOMContentLoaded", function () {
     form.addEventListener("submit", function (e) {
         e.preventDefault();
 
+        if (!agreement.checked) {
+            message.textContent = "Bạn cần xác nhận cam kết trước khi đăng phòng.";
+            return;
+        }
+
         const selectedPackage = document.querySelector('input[name="servicePackage"]:checked');
+        if (!selectedPackage) {
+            message.textContent = "Vui lòng chọn gói dịch vụ.";
+            return;
+        }
+
         let packagePrice = parseInt(selectedPackage.value, 10);
 
         const packageInfo =
@@ -51,7 +68,9 @@ document.addEventListener("DOMContentLoaded", function () {
             packagePrice -= discount;
         }
 
-        if (!spendBalance(packagePrice, `Mua gói ${packageInfo.name} để đăng phòng`)) {
+        const success = spendBalance(packagePrice, `Mua gói ${packageInfo.name} để đăng phòng`);
+
+        if (!success) {
             message.textContent = "Số dư không đủ để mua gói dịch vụ. Vui lòng nạp thêm tiền.";
             return;
         }
@@ -95,13 +114,12 @@ document.addEventListener("DOMContentLoaded", function () {
             views: 0,
             saves: 0,
             asks: 0,
-            responseTime: "15 phút"
+            responseTime: "15 phút",
+            verifiedCommitment: true
         };
 
         postedRooms.unshift(roomRecord);
         localStorage.setItem("sosvel_posted_rooms", JSON.stringify(postedRooms));
-
-        addPostChangeLog(user.email, roomRecord.title, `Tạo bài đăng mới với gói ${packageInfo.name}`);
 
         const packageRevenue = JSON.parse(localStorage.getItem("sosvel_package_revenue")) || 0;
         localStorage.setItem("sosvel_package_revenue", JSON.stringify(packageRevenue + packagePrice));
