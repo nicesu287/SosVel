@@ -57,7 +57,11 @@ function getGalleryImages(folder, id) {
 }
 
 function getRoleLabel(role) {
-    return role === "landlord" ? "Chủ trọ" : "Người thuê";
+    return role === "landlord" ? "Chủ trọ" : role === "admin" ? "Quản trị viên" : "Người thuê";
+}
+
+function isAdmin(user) {
+    return !!user && user.role === "admin";
 }
 
 function getSavedSearches() {
@@ -101,6 +105,63 @@ function addPostChangeLog(ownerEmail, roomTitle, message) {
         createdAt: new Date().toISOString()
     });
     localStorage.setItem("sosvel_post_change_logs", JSON.stringify(logs));
+}
+
+function getDailyCheckinKey() {
+    const user = getCurrentUser();
+    if (!user) return "";
+    return `sosvel_daily_checkin_${user.email}`;
+}
+
+function canDailyCheckin() {
+    const key = getDailyCheckinKey();
+    const lastDate = localStorage.getItem(key);
+    const today = new Date().toLocaleDateString("vi-VN");
+    return lastDate !== today;
+}
+
+function doDailyCheckin() {
+    const user = getCurrentUser();
+    if (!user) return;
+
+    const msg = document.getElementById("rewardMessage");
+    const key = getDailyCheckinKey();
+    const today = new Date().toLocaleDateString("vi-VN");
+
+    if (!canDailyCheckin()) {
+        msg.textContent = "Bạn đã điểm danh hôm nay rồi.";
+        return;
+    }
+
+    localStorage.setItem(key, today);
+    addPoints(10, "Điểm danh hằng ngày");
+
+    const current = getCurrentUser();
+    msg.style.color = "#1b5edb";
+    msg.textContent = "Điểm danh thành công, bạn nhận 10 điểm.";
+
+    if ((current.points || 0) >= 200 && (current.points || 0) % 200 < 10) {
+        showNotice("Chúc mừng", "Bạn đã đạt mốc 200 điểm và có thể nhận mã khuyến mãi từ web.");
+    }
+
+    renderRewardWidget();
+    updateAuthNav();
+}
+
+function renderRewardWidget() {
+    const user = getCurrentUser();
+    const widget = document.getElementById("rewardWidget");
+    const pointText = document.getElementById("rewardUserPoints");
+
+    if (!widget || !pointText) return;
+
+    if (!user) {
+        widget.classList.add("hidden");
+        return;
+    }
+
+    widget.classList.remove("hidden");
+    pointText.textContent = `Bạn hiện có ${user.points || 0} điểm`;
 }
 
 function createRoom(id, title, area, price, address, size, desc, coverIndex) {
@@ -266,6 +327,13 @@ function updateAuthNav() {
 function renderDashboardStrip() {
     const strip = document.getElementById("dashboardStrip");
     if (!strip) return;
+
+    const user = getCurrentUser();
+
+    if (!isAdmin(user)) {
+        strip.innerHTML = "";
+        return;
+    }
 
     const postedRooms = getPostedRooms();
     const platformRevenue = JSON.parse(localStorage.getItem("sosvel_platform_revenue")) || 0;
@@ -922,19 +990,43 @@ function renderSavedSearches() {
     const list = document.getElementById("savedSearchList");
     const data = getSavedSearches();
 
-    list.innerHTML = data.length
-        ? data.map(item => `
-            <div class="transaction-item">
-                <div><strong>${item.name}</strong></div>
-                <div><button class="secondary-btn apply-saved-search" data-id="${item.id}">Áp dụng</button></div>
+    if (!list) return;
+
+    if (!data.length) {
+        list.innerHTML = `<div class="info-strip">Chưa có bộ lọc nào được lưu.</div>`;
+        return;
+    }
+
+    list.innerHTML = data.map(item => `
+        <div class="transaction-item">
+            <div>
+                <strong>${item.name}</strong>
+                <p>
+                    Khu vực: ${item.filters.area || "Tất cả"} |
+                    Loại: ${item.filters.type || "Tất cả"} |
+                    Diện tích tối thiểu: ${item.filters.minSize || 0}m² |
+                    Giá tối đa: ${Number(item.filters.price || 5000000).toLocaleString("vi-VN")} VNĐ
+                </p>
             </div>
-        `).join("")
-        : `<div class="info-strip">Chưa có bộ lọc nào được lưu.</div>`;
+            <div class="room-card-actions">
+                <button class="secondary-btn apply-saved-search" data-id="${item.id}">Áp dụng</button>
+                <button class="secondary-btn delete-saved-search" data-id="${item.id}">Xóa</button>
+            </div>
+        </div>
+    `).join("");
 
     list.querySelectorAll(".apply-saved-search").forEach(btn => {
         btn.addEventListener("click", function () {
             const item = data.find(x => String(x.id) === this.dataset.id);
             if (item) applySavedSearch(item);
+        });
+    });
+
+    list.querySelectorAll(".delete-saved-search").forEach(btn => {
+        btn.addEventListener("click", function () {
+            const newData = data.filter(x => String(x.id) !== this.dataset.id);
+            saveSavedSearches(newData);
+            renderSavedSearches();
         });
     });
 }
@@ -986,6 +1078,7 @@ document.addEventListener("DOMContentLoaded", function () {
     renderPagination();
     initSignaturePad();
     renderSavedSearches();
+    renderRewardWidget();
 
     document.getElementById("priceInput").addEventListener("input", updatePrice);
     document.getElementById("searchBtn").addEventListener("click", filterRooms);
@@ -1159,4 +1252,18 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
         submitComment();
     });
+
+    const rewardToggle = document.getElementById("rewardToggle");
+    const rewardPanel = document.getElementById("rewardPanel");
+    const dailyCheckinBtn = document.getElementById("dailyCheckinBtn");
+
+    if (rewardToggle && rewardPanel) {
+        rewardToggle.addEventListener("click", function () {
+            rewardPanel.classList.toggle("hidden");
+        });
+    }
+
+    if (dailyCheckinBtn) {
+        dailyCheckinBtn.addEventListener("click", doDailyCheckin);
+    }
 });
