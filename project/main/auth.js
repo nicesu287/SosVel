@@ -45,7 +45,7 @@ function requireLogin() {
 
 function getLoyaltyTier(points = 0) {
     if (points >= 1000) return "Vàng";
-    if (points >= 500) return "Bạc";
+    if (points >= 200) return "Bạc";
     return "Đồng";
 }
 
@@ -124,6 +124,28 @@ function spendBalance(amount, description = "Chi tiêu dịch vụ") {
     return true;
 }
 
+function addWarningToUser(email) {
+    const users = getUsers();
+    const index = users.findIndex(u => u.email === email);
+
+    if (index === -1) return false;
+
+    users[index].warnings = (users[index].warnings || 0) + 1;
+
+    if (users[index].warnings >= 3) {
+        users[index].isLocked = true;
+    }
+
+    saveUsers(users);
+
+    const current = getCurrentUser();
+    if (current && current.email === email) {
+        updateCurrentUser(users[index]);
+    }
+
+    return true;
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     const registerForm = document.getElementById("registerForm");
     const loginForm = document.getElementById("loginForm");
@@ -148,10 +170,16 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             const users = getUsers();
-            const existingUser = users.find(user => user.email === email);
+            const existingEmail = users.find(user => user.email === email);
+            const existingCccd = users.find(user => user.cccd === cccd);
 
-            if (existingUser) {
+            if (existingEmail) {
                 message.textContent = "Email này đã được đăng ký.";
+                return;
+            }
+
+            if (existingCccd) {
+                message.textContent = "CCCD này đã tồn tại trong hệ thống.";
                 return;
             }
 
@@ -166,7 +194,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 balance: 0,
                 points: 0,
                 loyaltyTier: "Đồng",
-                bio: ""
+                bio: "",
+                warnings: 0,
+                isLocked: false
             });
 
             saveUsers(users);
@@ -192,6 +222,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (!user) {
                 message.textContent = "Email hoặc mật khẩu không đúng.";
+                return;
+            }
+
+            if (user.isLocked) {
+                message.textContent = "Tài khoản này đã bị khóa vĩnh viễn.";
                 return;
             }
 
