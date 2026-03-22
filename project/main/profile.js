@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const current = getCurrentUser();
 
         profileName.textContent = current.name;
-        profileRole.textContent = `Vai trò: ${current.role === "landlord" ? "Chủ trọ" : "Người thuê"}`;
+        profileRole.textContent = `Vai trò: ${current.role === "landlord" ? "Chủ trọ" : current.role === "admin" ? "Quản trị viên" : "Người thuê"}`;
         profileTier.textContent = current.loyaltyTier || "Đồng";
         profilePoints.textContent = current.points || 0;
         profileBalance.textContent = `${(current.balance || 0).toLocaleString("vi-VN")} VNĐ`;
