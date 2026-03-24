@@ -1126,38 +1126,50 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("downloadPdfBtn").addEventListener("click", downloadContractPdf);
     document.getElementById("cancelBookingBtn").addEventListener("click", cancelMockBooking);
 
-    document.getElementById("confirmContract").addEventListener("click", function () {
-        if (!requireLogin()) return;
+document.getElementById("confirmContract").addEventListener("click", function () {
+    if (!requireLogin()) return;
+    if (!currentRoom) return;
 
-        if (!validatePreDepositChecklist()) {
-            document.getElementById("contractMessage").textContent = "Bạn cần hoàn tất checklist tư vấn trước khi cọc.";
-            return;
-        }
+    const contractMessage = document.getElementById("contractMessage");
+    const depositAmount = Math.round(currentRoom.price / 2);
 
-        if (!hasSigned) {
-            document.getElementById("contractMessage").textContent = "Bạn cần ký tên điện tử trước khi xác nhận hợp đồng.";
-            return;
-        }
+    if (!validatePreDepositChecklist()) {
+        contractMessage.textContent = "Bạn cần hoàn tất checklist tư vấn trước khi cọc.";
+        return;
+    }
 
-        const platformRevenue = JSON.parse(localStorage.getItem("sosvel_platform_revenue")) || 0;
-        const commission = Math.round((currentRoom.price / 2) * 0.05);
-        localStorage.setItem("sosvel_platform_revenue", JSON.stringify(platformRevenue + commission));
+    if (!hasSigned) {
+        contractMessage.textContent = "Bạn cần ký tên điện tử trước khi xác nhận hợp đồng.";
+        return;
+    }
 
-        if (typeof addTransaction === "function") {
-            addTransaction({
-                type: "booking",
-                amount: Math.round(currentRoom.price / 2),
-                direction: "out",
-                description: `Đặt cọc phòng ${currentRoom.title}`
-            });
-        }
+    const success = spendBalance(depositAmount, `Thanh toán tiền cọc phòng ${currentRoom.title}`);
 
-        addPoints(20, "Hoàn tất đặt cọc mô phỏng");
-        document.getElementById("contractMessage").textContent =
-            "Hợp đồng cọc online đã được xác nhận thành công. Chủ trọ sẽ liên hệ lại với bạn sớm.";
-        renderDashboardStrip();
-        showNotice("Ký hợp đồng thành công", "Giao dịch đặt cọc đã được ghi nhận. Nền tảng đã cộng hoa hồng mô phỏng vào hệ thống.");
-    });
+    if (!success) {
+        contractMessage.textContent = "Số dư ví không đủ để thanh toán tiền cọc.";
+        return;
+    }
+
+    addRentalRecord(currentRoom);
+
+    const platformRevenue = JSON.parse(localStorage.getItem("sosvel_platform_revenue")) || 0;
+    const commission = Math.round(depositAmount * 0.05);
+    localStorage.setItem("sosvel_platform_revenue", JSON.stringify(platformRevenue + commission));
+
+    addPoints(20, "Hoàn tất đặt cọc và thuê phòng");
+
+    contractMessage.style.color = "#1b5edb";
+    contractMessage.textContent =
+        `Bạn đã thanh toán thành công ${formatPrice(depositAmount)} VNĐ tiền cọc cho ${currentRoom.title}.`;
+
+    updateAuthNav();
+    renderDashboardStrip();
+
+    showNotice(
+        "Thanh toán thành công",
+        `Vui lòng đóng tiền cọc của phần nhà mình thuê. Hệ thống đã trừ ${formatPrice(depositAmount)} VNĐ vào ví tài khoản của bạn và ghi nhận phòng đang thuê trong hồ sơ.`
+    );
+});
 
     document.getElementById("chatClose").addEventListener("click", function () {
         document.getElementById("chatBox").classList.add("hidden");
