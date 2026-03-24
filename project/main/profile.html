@@ -31,7 +31,7 @@
         <div class="search-heading">
             <span class="section-badge">Hồ sơ</span>
             <h2>Trang hồ sơ cá nhân</h2>
-            <p>Cập nhật thông tin, theo dõi cấp bậc tài khoản và điểm thưởng.</p>
+            <p>Cập nhật thông tin, theo dõi cấp bậc tài khoản, điểm thưởng và lịch sử thuê phòng.</p>
         </div>
 
         <div class="profile-layout">
@@ -58,7 +58,7 @@
 
                     <div class="profile-summary-item">
                         <span>Trạng thái</span>
-                        <strong>Đang hoạt động</strong>
+                        <strong id="profileStatus"></strong>
                     </div>
                 </div>
             </div>
@@ -88,6 +88,16 @@
                     <p id="profileMessage" class="auth-message"></p>
                 </form>
             </div>
+        </div>
+
+        <div class="profile-form-card" style="margin-top:24px;">
+            <h3>Phòng đang thuê hiện tại</h3>
+            <div id="currentRentalBox" class="wallet-summary"></div>
+        </div>
+
+        <div class="profile-form-card" style="margin-top:24px;">
+            <h3>Lịch sử thuê phòng</h3>
+            <div id="rentalHistoryList" class="transaction-list"></div>
         </div>
     </div>
 </div>
