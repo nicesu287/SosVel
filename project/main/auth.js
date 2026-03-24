@@ -145,7 +145,57 @@ function addWarningToUser(email) {
 
     return true;
 }
+function getRentalHistory() {
+    const user = getCurrentUser();
+    if (!user) return [];
+    return JSON.parse(localStorage.getItem(`sosvel_rental_history_${user.email}`)) || [];
+}
 
+function saveRentalHistory(history) {
+    const user = getCurrentUser();
+    if (!user) return;
+    localStorage.setItem(`sosvel_rental_history_${user.email}`, JSON.stringify(history));
+}
+
+function getCurrentRental() {
+    const user = getCurrentUser();
+    if (!user) return null;
+    return JSON.parse(localStorage.getItem(`sosvel_current_rental_${user.email}`)) || null;
+}
+
+function saveCurrentRental(rental) {
+    const user = getCurrentUser();
+    if (!user) return;
+    localStorage.setItem(`sosvel_current_rental_${user.email}`, JSON.stringify(rental));
+}
+
+function addRentalRecord(room) {
+    const user = getCurrentUser();
+    if (!user || !room) return false;
+
+    const history = getRentalHistory();
+
+    const record = {
+        id: `rental_${Date.now()}`,
+        roomId: room.id,
+        title: room.title,
+        type: room.type,
+        area: room.area,
+        address: room.address,
+        price: room.price,
+        ownerName: room.ownerName,
+        ownerPhone: room.ownerPhone,
+        depositAmount: Math.round(room.price / 2),
+        startedAt: new Date().toISOString(),
+        status: "Đang thuê"
+    };
+
+    history.unshift(record);
+    saveRentalHistory(history);
+    saveCurrentRental(record);
+
+    return true;
+}
 document.addEventListener("DOMContentLoaded", function () {
     const registerForm = document.getElementById("registerForm");
     const loginForm = document.getElementById("loginForm");
