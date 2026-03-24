@@ -6,6 +6,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const amountInput = document.getElementById("topupAmount");
     const message = document.getElementById("walletMessage");
 
+    function safeRead(key, fallback) {
+        try {
+            return JSON.parse(localStorage.getItem(key)) ?? fallback;
+        } catch {
+            return fallback;
+        }
+    }
+
     function renderBalance() {
         const user = getCurrentUser();
         if (!user) return;
@@ -13,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function addPlatformTopup(amount) {
-        const totalTopup = JSON.parse(localStorage.getItem("sosvel_platform_topup")) || 0;
+        const totalTopup = safeRead("sosvel_platform_topup", 0);
         localStorage.setItem("sosvel_platform_topup", JSON.stringify(totalTopup + amount));
     }
 
@@ -23,10 +31,9 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
 
         const amount = Number(amountInput.value);
-
         message.style.color = "#d92d20";
 
-        if (!amount || amount <= 0) {
+        if (!Number.isFinite(amount) || amount <= 0) {
             message.textContent = "Số tiền nạp không hợp lệ.";
             return;
         }
