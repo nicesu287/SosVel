@@ -27,6 +27,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     renderBalance();
 
+    document.querySelectorAll(".quick-topup").forEach(btn => {
+        btn.addEventListener("click", function () {
+            amountInput.value = this.dataset.amount;
+        });
+    });
+
     form.addEventListener("submit", function (e) {
         e.preventDefault();
 
@@ -52,11 +58,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
         amountInput.value = "";
         renderBalance();
-    });
-
-    document.querySelectorAll(".quick-topup").forEach(btn => {
-        btn.addEventListener("click", function () {
-            amountInput.value = this.dataset.amount;
-        });
     });
 });
