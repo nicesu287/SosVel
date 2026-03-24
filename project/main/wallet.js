@@ -1,43 +1,55 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ví tài khoản - SosVel</title>
-    <link rel="stylesheet" href="../stylist/style.css">
-</head>
-<body class="auth-page">
-<div class="auth-container wallet-page-wrap">
-    <div class="auth-card">
-        <h1>Ví SosVel</h1>
-        <p class="auth-subtitle">Nạp tiền và theo dõi số dư tài khoản</p>
+document.addEventListener("DOMContentLoaded", function () {
+    if (!requireLogin()) return;
 
-        <div class="wallet-balance-box">
-            <p><strong>Số dư hiện tại:</strong></p>
-            <h2 id="walletBalance">0 VNĐ</h2>
-        </div>
+    const balanceEl = document.getElementById("walletBalance");
+    const form = document.getElementById("walletForm");
+    const amountInput = document.getElementById("topupAmount");
+    const message = document.getElementById("walletMessage");
 
-        <form id="walletForm" class="auth-form">
-            <label for="topupAmount">Số tiền nạp</label>
-            <input type="number" id="topupAmount" placeholder="Nhập số tiền muốn nạp" required>
-            <button type="submit" class="auth-btn">Nạp tiền</button>
-        </form>
+    function renderBalance() {
+        const user = getCurrentUser();
+        if (!user) return;
+        balanceEl.textContent = `${(user.balance || 0).toLocaleString("vi-VN")} VNĐ`;
+    }
 
-        <div class="quick-topup-grid">
-            <button type="button" class="secondary-btn quick-topup" data-amount="50000">+50.000</button>
-            <button type="button" class="secondary-btn quick-topup" data-amount="100000">+100.000</button>
-            <button type="button" class="secondary-btn quick-topup" data-amount="200000">+200.000</button>
-            <button type="button" class="secondary-btn quick-topup" data-amount="500000">+500.000</button>
-        </div>
+    function addPlatformTopup(amount) {
+        const totalTopup = JSON.parse(localStorage.getItem("sosvel_platform_topup")) || 0;
+        localStorage.setItem("sosvel_platform_topup", JSON.stringify(totalTopup + amount));
+    }
 
-        <p id="walletMessage" class="auth-message"></p>
+    renderBalance();
 
-        <p class="auth-switch"><a href="transactions.html">Xem lịch sử giao dịch</a></p>
-        <p class="auth-switch"><a href="index.html">← Quay lại trang chủ</a></p>
-    </div>
-</div>
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
 
-<script src="auth.js"></script>
-<script src="wallet.js"></script>
-</body>
-</html>
+        const amount = Number(amountInput.value);
+
+        message.style.color = "#d92d20";
+
+        if (!amount || amount <= 0) {
+            message.textContent = "Số tiền nạp không hợp lệ.";
+            return;
+        }
+
+        const success = addBalance(amount);
+
+        if (!success) {
+            message.textContent = "Không thể nạp tiền vào ví.";
+            return;
+        }
+
+        addPlatformTopup(amount);
+
+        message.style.color = "#1b5edb";
+        message.textContent = `Nạp ${amount.toLocaleString("vi-VN")} VNĐ thành công.`;
+
+        amountInput.value = "";
+        renderBalance();
+    });
+
+    document.querySelectorAll(".quick-topup").forEach(btn => {
+        btn.addEventListener("click", function () {
+            amountInput.value = this.dataset.amount;
+        });
+    });
+});
